@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import connectToDatabase from "@/lib/mongodb";
 import Listing from "@/models/Listing";
+import "@/models/User"; // ensure User schema is registered for populate
 import { cookies } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development_only";
@@ -27,8 +28,10 @@ export async function GET(request: Request) {
 
     await connectToDatabase();
 
-    // Fetch listings descending by creation date
-    const listings = await Listing.find({ donorId: decoded.userId }).sort({ createdAt: -1 });
+    // Fetch listings and populate recipient NGO info for claim notification (US-D05)
+    const listings = await Listing.find({ donorId: decoded.userId })
+      .sort({ createdAt: -1 })
+      .populate("recipientId", "ngoProfile.orgName ngoProfile.contactPerson ngoProfile.phone");
 
     return NextResponse.json({ listings }, { status: 200 });
   } catch (error: any) {
