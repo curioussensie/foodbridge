@@ -24,9 +24,28 @@ export async function GET(
     const { id } = await params;
     await connectToDatabase();
     
+    // Fetch basic listing
     const listing = await Listing.findById(id);
     if (!listing) {
       return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+    }
+
+    // Determine if we should populate sensitive donor info (US-T05)
+    // Only populate if: user is logged in AND (user is the donor OR user is the recipient who claimed it)
+    const decoded = await verifyToken();
+    let shouldPopulateFullDonor = false;
+
+    if (decoded) {
+      if (
+        decoded.userId === listing.donorId.toString() ||
+        (listing.recipientId && decoded.userId === listing.recipientId.toString())
+      ) {
+        shouldPopulateFullDonor = true;
+      }
+    }
+
+    if (shouldPopulateFullDonor) {
+      await listing.populate("donorId", "donorProfile email");
     }
 
     return NextResponse.json({ listing }, { status: 200 });
