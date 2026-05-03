@@ -10,6 +10,26 @@ export default function DonorDashboard() {
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const handleCancel = async (id: string) => {
+    if (!window.confirm("Are you sure you want to cancel this listing? This action cannot be undone.")) return;
+    
+    try {
+      const res = await fetch(`/api/listings/${id}/cancel`, { method: "PATCH" });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to cancel listing");
+      }
+      
+      setListings((prev) => 
+        prev.map((listing) => 
+          listing._id === id ? { ...listing, status: "cancelled" } : listing
+        )
+      );
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
   useEffect(() => {
     async function fetchListings() {
       try {
@@ -125,6 +145,15 @@ export default function DonorDashboard() {
                             </svg>
                             Edit
                           </Link>
+                          <button
+                            onClick={() => handleCancel(listing._id)}
+                            className="flex-1 flex items-center justify-center min-h-10 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors focus:ring-2 focus:ring-red-200 focus:outline-none"
+                          >
+                            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Cancel
+                          </button>
                         </div>
                       )}
                     </div>
