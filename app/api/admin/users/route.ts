@@ -17,16 +17,21 @@ async function verifyAdmin() {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const admin = await verifyAdmin();
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   await connectToDatabase();
 
-  // Return all pending users with full details for the review queue
-  const users = await User.find({ status: "pending" })
+  const { searchParams } = new URL(request.url);
+  const statusFilter = searchParams.get("status");
+
+  const query = statusFilter ? { status: statusFilter } : {};
+
+  // Return users with full details
+  const users = await User.find(query)
     .select("-passwordHash")
-    .sort({ createdAt: 1 });
+    .sort({ createdAt: -1 });
 
   return NextResponse.json({ users }, { status: 200 });
 }

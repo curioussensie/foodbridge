@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import connectToDatabase from "@/lib/mongodb";
 import Listing from "@/models/Listing";
+import User from "@/models/User";
 import { cookies } from "next/headers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development_only";
@@ -26,9 +27,16 @@ export async function GET(request: Request) {
 
     await connectToDatabase();
 
-    // Fetch all available listings and populate the donor's basic details.
+    // Fetch all active donors
+    const activeDonors = await User.find({ role: "Donor", status: "active" }).select("_id");
+    const activeDonorIds = activeDonors.map((d) => d._id.toString());
+
+    // Fetch all available listings from active donors and populate the donor's basic details.
     // US-T05: Hide address and contact until claimed. So we only select name.
-    const listings = await Listing.find({ status: "available" })
+    const listings = await Listing.find({
+      status: "available",
+      donorId: { $in: activeDonorIds },
+    })
       .sort({ createdAt: -1 })
       .populate("donorId", "donorProfile.name donorProfile.foodType");
 
