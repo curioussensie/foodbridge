@@ -42,7 +42,9 @@ export default function DonorDashboard() {
         throw new Error(errorData.error || "Failed to cancel listing");
       }
       setListings((prev) =>
-        prev.map((l) => (l._id === id ? { ...l, status: "cancelled" } : l))
+        prev.map((listing) =>
+          listing._id === id ? { ...listing, status: "cancelled" } : listing
+        )
       );
     } catch (err: any) {
       alert(err.message);
