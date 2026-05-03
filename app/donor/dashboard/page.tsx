@@ -143,7 +143,19 @@ export default function DonorDashboard() {
           <h3 className="text-lg font-bold text-slate-800 line-clamp-1">{listing.foodName}</h3>
           <StatusBadge status={listing.status} />
         </div>
-        <p className="text-sm text-slate-600 mb-4">{listing.quantity} · {listing.category}</p>
+        <p className="text-sm text-slate-600 mb-2">{listing.quantity} · {listing.category}</p>
+
+        {listing.rating && (
+          <div className="mb-4 bg-amber-50/50 p-3 rounded-xl border border-amber-100/50">
+            <div className="flex items-center gap-1 mb-1">
+              <span className="text-amber-400 font-bold">{"★".repeat(listing.rating.stars)}</span>
+              <span className="text-slate-300 font-bold">{"★".repeat(5 - listing.rating.stars)}</span>
+            </div>
+            {listing.rating.comment && (
+              <p className="text-xs text-slate-600 italic">"{listing.rating.comment}"</p>
+            )}
+          </div>
+        )}
 
         <div className="mt-auto space-y-3">
           <div className="bg-slate-50 p-3 rounded-xl text-xs text-slate-600">
