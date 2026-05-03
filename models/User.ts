@@ -18,7 +18,8 @@ export interface IUser extends Document {
   email: string;
   passwordHash: string;
   role: "Donor" | "Recipient" | "Admin";
-  status: "pending" | "active" | "suspended" | "banned";
+  status: "pending" | "active" | "suspended" | "banned" | "rejected";
+  rejectionReason?: string;
   donorProfile?: IDonorProfile;
   ngoProfile?: INgoProfile;
   createdAt: Date;
@@ -56,9 +57,10 @@ const UserSchema = new Schema<IUser>(
     },
     status: {
       type: String,
-      enum: ["pending", "active", "suspended", "banned"],
+      enum: ["pending", "active", "suspended", "banned", "rejected"],
       default: "pending",
     },
+    rejectionReason: { type: String, required: false },
     donorProfile: { type: DonorProfileSchema, required: false },
     ngoProfile: { type: NgoProfileSchema, required: false },
   },
