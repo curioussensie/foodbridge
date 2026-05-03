@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/donor/register');
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/donor/register') || request.nextUrl.pathname.startsWith('/recipient/register');
   
   if (!token && !isAuthPage) {
     if (request.nextUrl.pathname.startsWith('/donor') || request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/recipient')) {

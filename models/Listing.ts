@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IListing extends Document {
   donorId: Types.ObjectId;
+  recipientId?: Types.ObjectId;
   foodName: string;
   quantity: string;
   category: string;
@@ -9,6 +10,7 @@ export interface IListing extends Document {
   pickupEndTime: Date;
   photoUrl?: string;
   status: "available" | "claimed" | "collected" | "cancelled";
+  claimedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +21,11 @@ const ListingSchema = new Schema<IListing>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    recipientId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
     },
     foodName: {
       type: String,
@@ -48,6 +55,10 @@ const ListingSchema = new Schema<IListing>(
       type: String,
       enum: ["available", "claimed", "collected", "cancelled"],
       default: "available",
+    },
+    claimedAt: {
+      type: Date,
+      required: false,
     },
   },
   { timestamps: true }
