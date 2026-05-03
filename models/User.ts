@@ -14,6 +14,13 @@ export interface INgoProfile {
   phone: string;
 }
 
+export interface IAdminLog {
+  adminId: mongoose.Types.ObjectId;
+  action: "suspended" | "banned" | "restored";
+  reason: string;
+  timestamp: Date;
+}
+
 export interface IUser extends Document {
   email: string;
   passwordHash: string;
@@ -22,6 +29,7 @@ export interface IUser extends Document {
   rejectionReason?: string;
   donorProfile?: IDonorProfile;
   ngoProfile?: INgoProfile;
+  adminLogs?: IAdminLog[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,6 +71,14 @@ const UserSchema = new Schema<IUser>(
     rejectionReason: { type: String, required: false },
     donorProfile: { type: DonorProfileSchema, required: false },
     ngoProfile: { type: NgoProfileSchema, required: false },
+    adminLogs: [
+      {
+        adminId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        action: { type: String, enum: ["suspended", "banned", "restored"], required: true },
+        reason: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
