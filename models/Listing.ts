@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
+import "./User";
 
 export interface IListing extends Document {
   donorId: Types.ObjectId;
