@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types, ObjectId } from "mongoose";
 import "./User";
 
 export interface IListing extends Document {
@@ -10,8 +10,9 @@ export interface IListing extends Document {
   pickupStartTime: Date;
   pickupEndTime: Date;
   photoUrl?: string;
-  status: "available" | "claimed" | "collected" | "cancelled";
+  status: "available" | "claimed" | "collected" | "cancelled" | "removed";
   claimedAt?: Date;
+  removalLog?: { adminId: Types.ObjectId; reason: string; removedAt: Date };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -54,12 +55,17 @@ const ListingSchema = new Schema<IListing>(
     },
     status: {
       type: String,
-      enum: ["available", "claimed", "collected", "cancelled"],
+      enum: ["available", "claimed", "collected", "cancelled", "removed"],
       default: "available",
     },
     claimedAt: {
       type: Date,
       required: false,
+    },
+    removalLog: {
+      adminId: { type: Schema.Types.ObjectId, ref: "User" },
+      reason: { type: String },
+      removedAt: { type: Date },
     },
   },
   { timestamps: true }
