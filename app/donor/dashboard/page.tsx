@@ -4,71 +4,87 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function buildMonthSlots(trend: { _id: { year: number; month: number }; count: number }[]) {
+  // Build last 6 months as slots
+  const now = new Date();
+  const slots = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const found = trend.find((t) => t._id.year === year && t._id.month === month);
+    slots.push({ label: MONTH_NAMES[month - 1], count: found ? found.count : 0 });
+  }
+  return slots;
+}
+
 export default function DonorDashboard() {
   const [listings, setListings] = useState<any[]>([]);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const fetchListings = async () => {
-    try {
-      const res = await fetch("/api/donor/listings");
-      if (!res.ok) {
-        if (res.status === 401 || res.status === 403) {
-          router.push("/login");
-          return;
-        }
-        throw new Error("Failed to load listings");
-      }
-      const data = await res.json();
-      setListings(data.listings);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchListings();
+    async function loadAll() {
+      try {
+        const [listingsRes, statsRes] = await Promise.all([
+          fetch("/api/donor/listings"),
+          fetch("/api/donor/stats"),
+        ]);
+
+        if (!listingsRes.ok) {
+          if (listingsRes.status === 401 || listingsRes.status === 403) {
+            router.push("/login");
+            return;
+          }
+          throw new Error("Failed to load listings");
+        }
+
+        const listingsData = await listingsRes.json();
+        setListings(listingsData.listings);
+
+        if (statsRes.ok) {
+          const statsData = await statsRes.json();
+          setStats(statsData);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadAll();
   }, [router]);
 
   const handleCancel = async (id: string) => {
     if (!window.confirm("Are you sure you want to cancel this listing? This action cannot be undone.")) return;
     try {
       const res = await fetch(`/api/listings/${id}/cancel`, { method: "PATCH" });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to cancel listing");
-      }
-      setListings((prev) =>
-        prev.map((listing) =>
-          listing._id === id ? { ...listing, status: "cancelled" } : listing
-        )
-      );
-    } catch (err: any) {
-      alert(err.message);
-    }
+      if (!res.ok) throw new Error((await res.json()).error || "Failed to cancel");
+      setListings((prev) => prev.map((l) => (l._id === id ? { ...l, status: "cancelled" } : l)));
+      setStats((prev: any) => prev ? {
+        ...prev,
+        counts: { ...prev.counts, available: prev.counts.available - 1, cancelled: prev.counts.cancelled + 1 }
+      } : prev);
+    } catch (err: any) { alert(err.message); }
   };
 
-  // US-D06: Mark listing as collected after pickup confirmation
   const handleCollect = async (id: string) => {
     if (!window.confirm("Confirm that the food has been picked up and mark this listing as collected?")) return;
     try {
       const res = await fetch(`/api/listings/${id}/collect`, { method: "PATCH" });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to mark as collected");
-      }
-      setListings((prev) =>
-        prev.map((l) => (l._id === id ? { ...l, status: "collected" } : l))
-      );
-    } catch (err: any) {
-      alert(err.message);
-    }
+      if (!res.ok) throw new Error((await res.json()).error || "Failed to mark as collected");
+      setListings((prev) => prev.map((l) => (l._id === id ? { ...l, status: "collected" } : l)));
+      setStats((prev: any) => prev ? {
+        ...prev,
+        counts: { ...prev.counts, claimed: prev.counts.claimed - 1, collected: prev.counts.collected + 1 }
+      } : prev);
+    } catch (err: any) { alert(err.message); }
   };
 
-  // Derived state — split listings into sections
   const claimedListings = listings.filter((l) => l.status === "claimed");
   const activeListings = listings.filter((l) => l.status === "available");
   const pastListings = listings.filter((l) => l.status === "collected" || l.status === "cancelled");
@@ -81,7 +97,7 @@ export default function DonorDashboard() {
       cancelled: "bg-red-100 text-red-600",
     };
     return (
-      <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${styles[status] || "bg-slate-100 text-slate-600"}`}>
+      <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${styles[status] || ""}`}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
@@ -89,7 +105,6 @@ export default function DonorDashboard() {
 
   const ListingCard = ({ listing }: { listing: any }) => (
     <div className={`bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col transition-shadow hover:shadow-md ${listing.status === "claimed" ? "border-blue-200" : "border-slate-100"}`}>
-      {/* US-D05: Claim notification banner */}
       {listing.status === "claimed" && (
         <div className="bg-blue-50 border-b border-blue-200 px-5 py-3 flex items-start gap-3">
           <span className="text-blue-500 mt-0.5 shrink-0">
@@ -102,15 +117,11 @@ export default function DonorDashboard() {
               Claimed by {listing.recipientId?.ngoProfile?.orgName || "an NGO"}
             </p>
             <p className="text-xs text-blue-600 mt-0.5">
-              Expect pickup between{" "}
-              {new Date(listing.pickupStartTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} –{" "}
-              {new Date(listing.pickupEndTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })},{" "}
-              {new Date(listing.pickupStartTime).toLocaleDateString()}
+              Pickup: {new Date(listing.pickupStartTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} – {new Date(listing.pickupEndTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}, {new Date(listing.pickupStartTime).toLocaleDateString()}
             </p>
             {listing.recipientId?.ngoProfile?.contactPerson && (
               <p className="text-xs text-blue-500 mt-0.5">
-                Contact: {listing.recipientId.ngoProfile.contactPerson}
-                {listing.recipientId.ngoProfile.phone ? ` · ${listing.recipientId.ngoProfile.phone}` : ""}
+                Contact: {listing.recipientId.ngoProfile.contactPerson}{listing.recipientId.ngoProfile.phone ? ` · ${listing.recipientId.ngoProfile.phone}` : ""}
               </p>
             )}
           </div>
@@ -118,11 +129,9 @@ export default function DonorDashboard() {
       )}
 
       {listing.photoUrl ? (
-        <div className="h-40 bg-slate-200 w-full overflow-hidden">
-          <img src={listing.photoUrl} alt={listing.foodName} className="w-full h-full object-cover" />
-        </div>
+        <div className="h-40 overflow-hidden"><img src={listing.photoUrl} alt={listing.foodName} className="w-full h-full object-cover" /></div>
       ) : (
-        <div className="h-36 bg-slate-100 w-full flex items-center justify-center text-slate-300">
+        <div className="h-36 bg-slate-100 flex items-center justify-center text-slate-300">
           <svg className="w-10 h-10 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -145,36 +154,20 @@ export default function DonorDashboard() {
 
           {listing.status === "available" && (
             <div className="flex gap-2">
-              <Link
-                href={`/donor/edit-listing/${listing._id}`}
-                className="flex-1 flex items-center justify-center min-h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors text-sm"
-              >
-                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
+              <Link href={`/donor/edit-listing/${listing._id}`} className="flex-1 flex items-center justify-center min-h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-sm transition-colors">
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                 Edit
               </Link>
-              <button
-                onClick={() => handleCancel(listing._id)}
-                className="flex-1 flex items-center justify-center min-h-10 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors text-sm"
-              >
-                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+              <button onClick={() => handleCancel(listing._id)} className="flex-1 flex items-center justify-center min-h-10 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl text-sm transition-colors">
+                <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 Cancel
               </button>
             </div>
           )}
 
-          {/* US-D06: Mark as Collected — only visible after claim */}
           {listing.status === "claimed" && (
-            <button
-              onClick={() => handleCollect(listing._id)}
-              className="w-full flex items-center justify-center min-h-10 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors text-sm"
-            >
-              <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+            <button onClick={() => handleCollect(listing._id)} className="w-full flex items-center justify-center min-h-10 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl text-sm transition-colors">
+              <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
               Mark as Collected
             </button>
           )}
@@ -182,6 +175,10 @@ export default function DonorDashboard() {
       </div>
     </div>
   );
+
+  // Build chart slots from stats
+  const chartSlots = stats ? buildMonthSlots(stats.monthlyTrend || []) : [];
+  const chartMax = Math.max(...chartSlots.map((s) => s.count), 1);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 py-8">
@@ -194,18 +191,66 @@ export default function DonorDashboard() {
             <p className="text-slate-500 mt-1">Manage your listings and track your impact.</p>
           </div>
           <div className="mt-4 sm:mt-0">
-            <Link
-              href="/donor/post-listing"
-              className="inline-flex items-center justify-center min-h-12 px-6 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors shadow-md shadow-amber-500/20"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+            <Link href="/donor/post-listing" className="inline-flex items-center justify-center min-h-12 px-6 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors shadow-md shadow-amber-500/20">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
               Post New Listing
             </Link>
           </div>
         </div>
 
+        {/* US-D07: Impact Stats */}
+        {stats && (
+          <section>
+            <h2 className="text-xl font-bold text-slate-800 mb-4">Your Impact</h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+                <div className="text-4xl font-extrabold text-emerald-600">{stats.counts.collected}</div>
+                <div className="text-sm text-slate-500 mt-1 font-medium">Donations Rescued</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+                <div className="text-4xl font-extrabold text-amber-500">{stats.counts.available}</div>
+                <div className="text-sm text-slate-500 mt-1 font-medium">Active Listings</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+                <div className="text-4xl font-extrabold text-blue-500">{stats.counts.claimed}</div>
+                <div className="text-sm text-slate-500 mt-1 font-medium">Pending Pickups</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 text-center">
+                <div className="text-4xl font-extrabold text-slate-700">
+                  {stats.counts.available + stats.counts.claimed + stats.counts.collected + stats.counts.cancelled}
+                </div>
+                <div className="text-sm text-slate-500 mt-1 font-medium">Total Posted</div>
+              </div>
+            </div>
+
+            {/* Monthly trend chart */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+              <h3 className="text-base font-bold text-slate-700 mb-6">Monthly Donations Rescued (Last 6 Months)</h3>
+              <div className="flex items-end gap-3" style={{ height: "128px" }}>
+                {chartSlots.map((slot, i) => {
+                  const barHeightPx = slot.count === 0 ? 4 : Math.max((slot.count / chartMax) * 104, 12);
+                  return (
+                    <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                      <span className="text-xs font-semibold text-slate-500" style={{ minHeight: "16px" }}>
+                        {slot.count > 0 ? slot.count : ""}
+                      </span>
+                      <div
+                        className="w-full rounded-t-lg transition-all duration-500"
+                        style={{
+                          height: `${barHeightPx}px`,
+                          backgroundColor: slot.count === 0 ? "#f1f5f9" : "#f59e0b",
+                        }}
+                      />
+                      <span className="text-xs text-slate-400 font-medium">{slot.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Listings */}
         {loading ? (
           <div className="flex justify-center p-24">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500"></div>
@@ -221,13 +266,10 @@ export default function DonorDashboard() {
             </div>
             <h3 className="text-lg font-semibold text-slate-800">No listings yet</h3>
             <p className="text-slate-500 mt-1 mb-6">Start sharing your surplus food with the community.</p>
-            <Link href="/donor/post-listing" className="text-amber-500 font-medium hover:text-amber-600">
-              Create your first listing &rarr;
-            </Link>
+            <Link href="/donor/post-listing" className="text-amber-500 font-medium hover:text-amber-600">Create your first listing &rarr;</Link>
           </div>
         ) : (
           <>
-            {/* Pending Pickups (US-D05) */}
             {claimedListings.length > 0 && (
               <section>
                 <div className="flex items-center gap-2 mb-4">
@@ -236,33 +278,25 @@ export default function DonorDashboard() {
                   <span className="text-sm font-medium bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full">{claimedListings.length}</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {claimedListings.map((listing) => (
-                    <ListingCard key={listing._id} listing={listing} />
-                  ))}
+                  {claimedListings.map((l) => <ListingCard key={l._id} listing={l} />)}
                 </div>
               </section>
             )}
 
-            {/* Active Listings */}
             {activeListings.length > 0 && (
               <section>
                 <h2 className="text-xl font-bold text-slate-800 mb-4">Active Listings</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {activeListings.map((listing) => (
-                    <ListingCard key={listing._id} listing={listing} />
-                  ))}
+                  {activeListings.map((l) => <ListingCard key={l._id} listing={l} />)}
                 </div>
               </section>
             )}
 
-            {/* Past Donations */}
             {pastListings.length > 0 && (
               <section>
                 <h2 className="text-xl font-bold text-slate-800 mb-4">Past Donations</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {pastListings.map((listing) => (
-                    <ListingCard key={listing._id} listing={listing} />
-                  ))}
+                  {pastListings.map((l) => <ListingCard key={l._id} listing={l} />)}
                 </div>
               </section>
             )}
