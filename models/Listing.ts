@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types, ObjectId } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 import "./User";
 
 export interface IListing extends Document {
@@ -13,6 +13,7 @@ export interface IListing extends Document {
   status: "available" | "claimed" | "collected" | "cancelled" | "removed";
   claimedAt?: Date;
   removalLog?: { adminId: Types.ObjectId; reason: string; removedAt: Date };
+  rating?: { stars: number; comment?: string; ratedAt: Date };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -66,6 +67,11 @@ const ListingSchema = new Schema<IListing>(
       adminId: { type: Schema.Types.ObjectId, ref: "User" },
       reason: { type: String },
       removedAt: { type: Date },
+    },
+    rating: {
+      stars: { type: Number, min: 1, max: 5 },
+      comment: { type: String },
+      ratedAt: { type: Date },
     },
   },
   { timestamps: true }
