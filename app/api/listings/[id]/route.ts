@@ -4,6 +4,8 @@ import connectToDatabase from "@/lib/mongodb";
 import Listing from "@/models/Listing";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret_for_development_only";
 
 async function verifyToken() {
@@ -24,12 +26,39 @@ export async function GET(
     const { id } = await params;
     await connectToDatabase();
     
-    const listing = await Listing.findById(id);
+    // Fetch listing and populate donor
+    const listing = await Listing.findById(id).populate("donorId");
     if (!listing) {
       return NextResponse.json({ error: "Listing not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ listing }, { status: 200 });
+    // Determine if we should expose sensitive donor info (US-T05)
+    // Only expose if: user is logged in AND (user is the donor OR user is the recipient who claimed it)
+    const decoded = await verifyToken();
+    let isAuthorized = false;
+
+    if (decoded) {
+      if (
+        decoded.userId === listing.donorId._id.toString() ||
+        (listing.recipientId && decoded.userId === listing.recipientId.toString())
+      ) {
+        isAuthorized = true;
+      }
+    }
+
+    // Clone the listing to a plain object to safely modify it
+    const listingObj = listing.toObject();
+
+    if (!isAuthorized && listingObj.donorId) {
+      // Strip sensitive information
+      if (listingObj.donorId.donorProfile) {
+        delete listingObj.donorId.donorProfile.address;
+        delete listingObj.donorId.donorProfile.contact;
+      }
+      delete listingObj.donorId.email;
+    }
+
+    return NextResponse.json({ listing: listingObj }, { status: 200 });
   } catch (error: any) {
     console.error("Fetch listing error:", error);
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
