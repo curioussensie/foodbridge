@@ -33,14 +33,21 @@ export async function POST(request: Request) {
 
     if (user.status === "pending") {
       return NextResponse.json(
-        { error: "Your account is still pending admin approval." },
+        { error: "Your account is pending admin approval. You will be notified once reviewed." },
+        { status: 403 },
+      );
+    }
+
+    if (user.status === "rejected") {
+      return NextResponse.json(
+        { error: `Your registration was rejected. Reason: ${user.rejectionReason || "No reason provided."}` },
         { status: 403 },
       );
     }
 
     if (user.status === "suspended" || user.status === "banned") {
       return NextResponse.json(
-        { error: "Your account has been suspended or banned." },
+        { error: "Your account has been suspended or banned. Please contact support." },
         { status: 403 },
       );
     }
