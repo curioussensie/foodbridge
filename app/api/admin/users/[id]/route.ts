@@ -26,14 +26,14 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const { action, reason } = body; // action: "approve" | "reject"
+  const { action, reason } = body; // action: "approve" | "reject" | "suspend" | "ban" | "restore"
 
-  if (!action || !["approve", "reject"].includes(action)) {
-    return NextResponse.json({ error: "Invalid action. Must be 'approve' or 'reject'." }, { status: 400 });
+  if (!action || !["approve", "reject", "suspend", "ban", "restore"].includes(action)) {
+    return NextResponse.json({ error: "Invalid action." }, { status: 400 });
   }
 
-  if (action === "reject" && (!reason || reason.trim() === "")) {
-    return NextResponse.json({ error: "A reason is required when rejecting a registration." }, { status: 400 });
+  if (["reject", "suspend", "ban"].includes(action) && (!reason || reason.trim() === "")) {
+    return NextResponse.json({ error: "A reason is required for this action." }, { status: 400 });
   }
 
   await connectToDatabase();
@@ -41,22 +41,34 @@ export async function PATCH(
   const user = await User.findById(id);
   if (!user) return NextResponse.json({ error: "User not found." }, { status: 404 });
 
-  if (user.status !== "pending") {
-    return NextResponse.json({ error: "This user is not pending review." }, { status: 400 });
-  }
-
   if (action === "approve") {
+    if (user.status !== "pending") return NextResponse.json({ error: "User is not pending." }, { status: 400 });
     user.status = "active";
     user.rejectionReason = undefined;
-  } else {
+  } else if (action === "reject") {
+    if (user.status !== "pending") return NextResponse.json({ error: "User is not pending." }, { status: 400 });
     user.status = "rejected";
     user.rejectionReason = reason.trim();
+  } else if (["suspend", "ban", "restore"].includes(action)) {
+    // Determine the new status
+    const newStatus = action === "restore" ? "active" : action === "suspend" ? "suspended" : "banned";
+    
+    user.status = newStatus;
+    
+    // Log the admin action
+    if (!user.adminLogs) user.adminLogs = [];
+    user.adminLogs.push({
+      adminId: admin.userId,
+      action: action,
+      reason: reason || "Account restored",
+      timestamp: new Date()
+    });
   }
 
   await user.save();
 
   return NextResponse.json({
-    message: `User ${action === "approve" ? "approved" : "rejected"} successfully.`,
+    message: `User ${action} successfully.`,
     user: { id: user._id, email: user.email, status: user.status },
   }, { status: 200 });
 }
