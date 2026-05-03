@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function PostListingPage() {
@@ -16,6 +16,14 @@ export default function PostListingPage() {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((data) => setCategories((data.categories || []).map((c: any) => c.name)))
+      .catch(() => setCategories(["Bakery & Pastries", "Fresh Produce", "Prepared Meals", "Groceries", "Other"]));
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData((prev) => ({
@@ -151,11 +159,9 @@ export default function PostListingPage() {
                   className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all bg-white"
                 >
                   <option value="" disabled>Select category</option>
-                  <option value="Bakery">Bakery & Pastries</option>
-                  <option value="Produce">Fresh Produce</option>
-                  <option value="Prepared Meals">Prepared Meals</option>
-                  <option value="Groceries">Groceries</option>
-                  <option value="Other">Other</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
                 </select>
               </div>
             </div>
