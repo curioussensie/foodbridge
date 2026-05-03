@@ -51,7 +51,24 @@ export default function DonorDashboard() {
     }
   };
 
-  // Derived state
+  // US-D06: Mark listing as collected after pickup confirmation
+  const handleCollect = async (id: string) => {
+    if (!window.confirm("Confirm that the food has been picked up and mark this listing as collected?")) return;
+    try {
+      const res = await fetch(`/api/listings/${id}/collect`, { method: "PATCH" });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to mark as collected");
+      }
+      setListings((prev) =>
+        prev.map((l) => (l._id === id ? { ...l, status: "collected" } : l))
+      );
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  // Derived state — split listings into sections
   const claimedListings = listings.filter((l) => l.status === "claimed");
   const activeListings = listings.filter((l) => l.status === "available");
   const pastListings = listings.filter((l) => l.status === "collected" || l.status === "cancelled");
@@ -72,7 +89,7 @@ export default function DonorDashboard() {
 
   const ListingCard = ({ listing }: { listing: any }) => (
     <div className={`bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col transition-shadow hover:shadow-md ${listing.status === "claimed" ? "border-blue-200" : "border-slate-100"}`}>
-      {/* Claim Notification Banner — US-D05 */}
+      {/* US-D05: Claim notification banner */}
       {listing.status === "claimed" && (
         <div className="bg-blue-50 border-b border-blue-200 px-5 py-3 flex items-start gap-3">
           <span className="text-blue-500 mt-0.5 shrink-0">
@@ -148,6 +165,19 @@ export default function DonorDashboard() {
               </button>
             </div>
           )}
+
+          {/* US-D06: Mark as Collected — only visible after claim */}
+          {listing.status === "claimed" && (
+            <button
+              onClick={() => handleCollect(listing._id)}
+              className="w-full flex items-center justify-center min-h-10 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors text-sm"
+            >
+              <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Mark as Collected
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -197,7 +227,7 @@ export default function DonorDashboard() {
           </div>
         ) : (
           <>
-            {/* Claimed Notifications (US-D05) */}
+            {/* Pending Pickups (US-D05) */}
             {claimedListings.length > 0 && (
               <section>
                 <div className="flex items-center gap-2 mb-4">
