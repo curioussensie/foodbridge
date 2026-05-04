@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DonorRegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -53,155 +56,184 @@ export default function DonorRegisterPage() {
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white max-w-md w-full p-8 rounded-2xl shadow-lg text-center space-y-6">
-          <div className="w-16 h-16 bg-green-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="bg-white max-w-md w-full p-12 rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 text-center space-y-8">
+          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800">Registration Complete</h2>
-          <p className="text-slate-500 text-lg">{successMessage}</p>
-          <a
-            href="/"
-            className="inline-block mt-4 w-full min-h-12 flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:outline-none"
+          <div>
+             <h2 className="text-3xl font-black text-slate-800 tracking-tight mb-2">Welcome Aboard!</h2>
+             <p className="text-slate-500 leading-relaxed font-medium">{successMessage}</p>
+          </div>
+          <button
+            onClick={() => router.push("/login")}
+            className="w-full h-14 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-amber-500/20"
           >
-            Return to Home
-          </a>
+            Sign In Now
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
-      <div className="bg-white max-w-lg w-full p-6 sm:p-8 rounded-2xl shadow-lg">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Partner with FoodBridge</h1>
-          <p className="text-slate-500">Register your business to start donating surplus food.</p>
+    <div className="min-h-screen bg-slate-50 py-20 px-6">
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-12 text-center">
+           <Link href="/" className="inline-flex items-center gap-2 mb-8 group">
+              <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">FB</div>
+              <span className="text-xl font-black text-slate-800 tracking-tight">FoodBridge</span>
+           </Link>
+           <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-3">Partner with us</h1>
+           <p className="text-slate-500 font-medium max-w-md mx-auto">Join hundreds of businesses reducing food waste and helping communities.</p>
         </div>
 
-        {status === "error" && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl">
-            {errorMessage}
+        <div className="bg-white rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 overflow-hidden">
+          <div className="p-8 sm:p-12">
+            {status === "error" && (
+              <div className="mb-10 p-5 bg-red-50 border border-red-100 text-red-600 rounded-2xl font-bold text-sm text-center">
+                {errorMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-10">
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="name">
+                      Business Name
+                    </label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                      placeholder="e.g. Bella Italia Restaurant"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="address">
+                      Pickup Address
+                    </label>
+                    <input
+                      id="address"
+                      name="address"
+                      type="text"
+                      required
+                      value={formData.address}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                      placeholder="123 Main Street, London"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="contact">
+                      Contact Phone
+                    </label>
+                    <input
+                      id="contact"
+                      name="contact"
+                      type="tel"
+                      required
+                      value={formData.contact}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                      placeholder="+44 7123 456789"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="foodType">
+                      Food Category
+                    </label>
+                    <select
+                      id="foodType"
+                      name="foodType"
+                      required
+                      value={formData.foodType}
+                      onChange={handleChange}
+                      className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 bg-white"
+                    >
+                      <option value="" disabled>Select type</option>
+                      <option value="Bakery">Bakery & Pastries</option>
+                      <option value="Produce">Fresh Produce</option>
+                      <option value="Prepared Meals">Prepared Meals</option>
+                      <option value="Groceries">Groceries</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <div className="flex items-center gap-4 mb-8">
+                     <div className="h-px flex-1 bg-slate-100"></div>
+                     <span className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">Account Details</span>
+                     <div className="h-px flex-1 bg-slate-100"></div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="email">
+                        Email Address
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                        placeholder="owner@business.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="password">
+                        Create Password
+                      </label>
+                      <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        required
+                        minLength={8}
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full h-16 bg-slate-900 hover:bg-amber-500 text-white font-black rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-3 uppercase tracking-widest text-sm"
+                >
+                  {status === "loading" ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    "Create Donor Account"
+                  )}
+                </button>
+                <p className="text-center text-sm text-slate-500 mt-8 font-medium">
+                  Already have an account? <Link href="/login" className="text-amber-600 font-bold hover:underline">Sign In</Link>
+                </p>
+              </div>
+            </form>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="name">
-                Business / Restaurant Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="e.g. Bella Italia"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="address">
-                Full Address
-              </label>
-              <input
-                id="address"
-                name="address"
-                type="text"
-                required
-                value={formData.address}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="123 Main Street"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="contact">
-                Contact Phone
-              </label>
-              <input
-                id="contact"
-                name="contact"
-                type="tel"
-                required
-                value={formData.contact}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="+1 234 567 890"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="foodType">
-                Primary Food Type
-              </label>
-              <select
-                id="foodType"
-                name="foodType"
-                required
-                value={formData.foodType}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all bg-white"
-              >
-                <option value="" disabled>Select category</option>
-                <option value="Bakery">Bakery & Pastries</option>
-                <option value="Produce">Fresh Produce</option>
-                <option value="Prepared Meals">Prepared Meals</option>
-                <option value="Groceries">Groceries</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            
-            <hr className="my-6 border-slate-100" />
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="email">
-                Account Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="contact@yourbusiness.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="password">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={8}
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="Min 8 characters"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="w-full min-h-12 flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed mt-8"
-          >
-            {status === "loading" ? "Registering..." : "Register Account"}
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );

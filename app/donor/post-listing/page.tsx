@@ -61,77 +61,81 @@ export default function PostListingPage() {
 
   if (status === "success") {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-        <div className="bg-white max-w-md w-full p-8 rounded-2xl shadow-lg text-center space-y-6">
-          <div className="w-16 h-16 bg-green-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      <div className="p-6 lg:p-20 flex flex-col items-center justify-center min-h-[80vh]">
+        <div className="bg-white max-w-md w-full p-12 rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 text-center space-y-8">
+          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800">Listing Posted!</h2>
-          <p className="text-slate-500 text-lg">Your food listing is now available for recipients to claim.</p>
-          <button
-            onClick={() => {
-              setFormData({
-                foodName: "",
-                quantity: "",
-                category: "",
-                pickupStartTime: "",
-                pickupEndTime: "",
-                photoUrl: "",
-              });
-              setStatus("idle");
-            }}
-            className="inline-block mt-4 w-full min-h-12 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium rounded-xl transition-colors focus:ring-2 focus:ring-slate-200 focus:outline-none"
-          >
-            Post Another Listing
-          </button>
-          <button
-            onClick={() => router.push("/donor/dashboard")}
-            className="inline-block mt-2 w-full min-h-12 flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors focus:ring-2 focus:ring-amber-500 focus:outline-none"
-          >
-            Go to Dashboard
-          </button>
+          <div>
+             <h2 className="text-3xl font-black text-slate-800 tracking-tight mb-2">Success!</h2>
+             <p className="text-slate-500 leading-relaxed font-medium">Your donation is now live and waiting for a recipient to claim it.</p>
+          </div>
+          <div className="space-y-3 pt-4">
+            <button
+              onClick={() => {
+                setFormData({
+                  foodName: "",
+                  quantity: "",
+                  category: "",
+                  pickupStartTime: "",
+                  pickupEndTime: "",
+                  photoUrl: "",
+                });
+                setStatus("idle");
+              }}
+              className="w-full h-14 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-amber-500/20"
+            >
+              Post Another Item
+            </button>
+            <button
+              onClick={() => router.push("/donor")}
+              className="w-full h-14 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold rounded-2xl transition-all"
+            >
+              Go to Overview
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
-      <div className="bg-white max-w-xl w-full p-6 sm:p-8 rounded-2xl shadow-lg">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">Post a Food Listing</h1>
-          <p className="text-slate-500">Share your surplus food with the community.</p>
-        </div>
-
-        {status === "error" && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl">
-            {errorMessage}
+    <div className="p-6 lg:p-12 max-w-4xl mx-auto">
+      <div className="bg-white rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 overflow-hidden">
+        <div className="p-8 sm:p-12">
+          <div className="mb-12 text-center">
+            <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-3">Post a Donation</h1>
+            <p className="text-slate-500 font-medium leading-relaxed max-w-md mx-auto">Help reduce food waste by sharing your surplus items with those in need.</p>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="foodName">
-                Food Name / Description
-              </label>
-              <input
-                id="foodName"
-                name="foodName"
-                type="text"
-                required
-                value={formData.foodName}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="e.g. 10 Loaves of Sourdough Bread"
-              />
+          {status === "error" && (
+            <div className="mb-10 p-5 bg-red-50 border border-red-100 text-red-600 rounded-2xl font-bold text-sm text-center">
+              {errorMessage}
             </div>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+              <div className="md:col-span-2">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="foodName">
+                  What are you donating?
+                </label>
+                <input
+                  id="foodName"
+                  name="foodName"
+                  type="text"
+                  required
+                  value={formData.foodName}
+                  onChange={handleChange}
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                  placeholder="e.g. 10 Loaves of Fresh Sourdough"
+                />
+              </div>
+
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="quantity">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="quantity">
                   Quantity
                 </label>
                 <input
@@ -141,13 +145,13 @@ export default function PostListingPage() {
                   required
                   value={formData.quantity}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
                   placeholder="e.g. 5 kg or 10 boxes"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="category">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="category">
                   Category
                 </label>
                 <select
@@ -156,7 +160,7 @@ export default function PostListingPage() {
                   required
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all bg-white"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 bg-white"
                 >
                   <option value="" disabled>Select category</option>
                   {categories.map((cat) => (
@@ -164,64 +168,83 @@ export default function PostListingPage() {
                   ))}
                 </select>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="pickupStartTime">
-                  Pickup Start Time
-                </label>
-                <input
-                  id="pickupStartTime"
-                  name="pickupStartTime"
-                  type="datetime-local"
-                  required
-                  value={formData.pickupStartTime}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                />
+              <div className="md:col-span-2 pt-4">
+                 <h3 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <span className="w-6 h-6 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-[10px]">
+                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </span>
+                    Collection Window
+                 </h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="pickupStartTime">
+                        Starts From
+                      </label>
+                      <input
+                        id="pickupStartTime"
+                        name="pickupStartTime"
+                        type="datetime-local"
+                        required
+                        value={formData.pickupStartTime}
+                        onChange={handleChange}
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="pickupEndTime">
+                        Ends At
+                      </label>
+                      <input
+                        id="pickupEndTime"
+                        name="pickupEndTime"
+                        type="datetime-local"
+                        required
+                        value={formData.pickupEndTime}
+                        onChange={handleChange}
+                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                      />
+                    </div>
+                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="pickupEndTime">
-                  Pickup End Time
+              <div className="md:col-span-2">
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="photoUrl">
+                  Photo URL <span className="text-slate-300 font-normal italic lowercase">(Optional)</span>
                 </label>
                 <input
-                  id="pickupEndTime"
-                  name="pickupEndTime"
-                  type="datetime-local"
-                  required
-                  value={formData.pickupEndTime}
+                  id="photoUrl"
+                  name="photoUrl"
+                  type="url"
+                  value={formData.photoUrl}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
+                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                  placeholder="https://images.unsplash.com/..."
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="photoUrl">
-                Photo URL (Optional)
-              </label>
-              <input
-                id="photoUrl"
-                name="photoUrl"
-                type="url"
-                value={formData.photoUrl}
-                onChange={handleChange}
-                className="w-full px-4 py-3 min-h-12 rounded-xl border border-slate-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all"
-                placeholder="https://example.com/photo.jpg"
-              />
+            <div className="pt-6">
+               <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full h-16 bg-slate-900 hover:bg-amber-500 text-white font-black rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-3 uppercase tracking-widest text-sm"
+               >
+                  {status === "loading" ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                       Confirm & Post Listing
+                    </>
+                  )}
+               </button>
+               <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6">
+                  By posting, you agree to our food safety guidelines.
+               </p>
             </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="w-full min-h-12 flex items-center justify-center bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed mt-8"
-          >
-            {status === "loading" ? "Posting..." : "Post Listing"}
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
