@@ -121,156 +121,192 @@ export default function ClaimHistoryPage() {
   const collected = claims.filter((c) => c.status === "collected").length;
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-
-        {/* Header */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-800">My Claim History</h1>
-              <p className="text-slate-500 text-sm mt-0.5">All donations you have claimed.</p>
-            </div>
+    <div className="p-6 lg:p-10 space-y-10">
+      {/* Header */}
+      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm shadow-blue-500/5">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
           </div>
-
-          {!loading && (
-            <div className="flex gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-extrabold text-slate-800">{totalClaims}</div>
-                <div className="text-xs text-slate-400 font-medium mt-0.5">Total Claims</div>
-              </div>
-              <div className="w-px bg-slate-100" />
-              <div className="text-center">
-                <div className="text-3xl font-extrabold text-emerald-600">{collected}</div>
-                <div className="text-xs text-slate-400 font-medium mt-0.5">Collected</div>
-              </div>
-            </div>
-          )}
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">My Claim History</h1>
+            <p className="text-slate-500 mt-1">Track all your food rescues and contributions.</p>
+          </div>
         </div>
 
-        {loading ? (
-          <div className="flex justify-center p-16"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500" /></div>
-        ) : error ? (
-          <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-200">{error}</div>
-        ) : claims.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-16 text-center">
-            <p className="text-slate-500">You haven't claimed any donations yet.</p>
-            <button onClick={() => router.push("/recipient/browse")} className="mt-4 px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-xl text-sm hover:bg-blue-700 transition-colors">Browse Listings</button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {claims.map((claim) => {
-              const donor = claim.donorId?.donorProfile;
-              return (
-                <div key={claim._id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 sm:p-6">
-                  <div className="flex items-start justify-between gap-4 flex-wrap">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h2 className="text-base font-bold text-slate-800">{claim.foodName}</h2>
-                        <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium capitalize ${STATUS_STYLES[claim.status] || "bg-slate-100 text-slate-500"}`}>
-                          {claim.status}
-                        </span>
-                      </div>
-                      <div className="text-sm text-slate-500 mt-1">
-                        {claim.category} · {claim.quantity}
-                      </div>
-                      {claim.claimedAt && (
-                        <div className="text-xs text-slate-400 mt-1">
-                          Claimed {new Date(claim.claimedAt).toLocaleDateString([], { dateStyle: "medium" })}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex gap-2 flex-wrap">
-                      {/* US-T08: Cancel claim */}
-                      {claim.status === "claimed" && (
-                        <button
-                          onClick={() => handleUnclaim(claim._id)}
-                          disabled={processingId === claim._id}
-                          className="text-xs font-semibold px-3 py-1.5 bg-orange-100 text-orange-700 hover:bg-orange-200 rounded-lg transition-colors disabled:opacity-50"
-                        >
-                          Cancel Claim
-                        </button>
-                      )}
-                      {/* US-T06: Rate */}
-                      {claim.status === "collected" && !claim.rating && (
-                        <button
-                          onClick={() => openRatingModal(claim._id, claim.foodName)}
-                          className="text-xs font-semibold px-3 py-1.5 bg-amber-100 text-amber-700 hover:bg-amber-200 rounded-lg transition-colors"
-                        >
-                          ★ Rate Donation
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Donor details (revealed after claim) */}
-                  {donor && (
-                    <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <div className="text-xs text-slate-400 font-medium">Donor</div>
-                        <div className="text-sm font-semibold text-slate-700 mt-0.5">{donor.name}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-slate-400 font-medium">Address</div>
-                        <div className="text-sm text-slate-600 mt-0.5">{donor.address}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-slate-400 font-medium">Contact</div>
-                        <div className="text-sm text-slate-600 mt-0.5">{donor.contact}</div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Existing rating */}
-                  {claim.rating && (
-                    <div className="mt-4 pt-4 border-t border-slate-100">
-                      <div className="flex items-center gap-2">
-                        <span className="text-amber-400 text-lg">{Array.from({ length: claim.rating.stars }, () => "★").join("")}<span className="text-slate-200">{Array.from({ length: 5 - claim.rating.stars }, () => "★").join("")}</span></span>
-                        {claim.rating.comment && <span className="text-sm text-slate-500 italic">"{claim.rating.comment}"</span>}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        {!loading && (
+          <div className="flex items-center gap-8 px-8 py-4 bg-slate-50 rounded-2xl border border-slate-100/50">
+            <div className="text-center">
+              <div className="text-3xl font-black text-slate-800">{totalClaims}</div>
+              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total Claims</div>
+            </div>
+            <div className="w-px h-10 bg-slate-200" />
+            <div className="text-center">
+              <div className="text-3xl font-black text-emerald-600">{collected}</div>
+              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Collected</div>
+            </div>
           </div>
         )}
       </div>
 
+      {loading ? (
+        <div className="flex justify-center p-24">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+        </div>
+      ) : error ? (
+        <div className="p-6 bg-red-50 text-red-600 rounded-2xl border border-red-100 font-medium">{error}</div>
+      ) : claims.length === 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-20 text-center">
+          <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
+             <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+             </svg>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-800">No claims yet</h3>
+          <p className="text-slate-500 mt-2 max-w-md mx-auto mb-8">You haven't claimed any donations yet. Start making an impact today!</p>
+          <button onClick={() => router.push("/recipient/browse")} className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all">Browse Listings</button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
+          {claims.map((claim) => {
+            const donor = claim.donorId?.donorProfile;
+            return (
+              <div key={claim._id} className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all p-6 sm:p-8 flex flex-col md:flex-row gap-8">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className={`text-[10px] px-3 py-1 rounded-lg font-bold uppercase tracking-widest ${STATUS_STYLES[claim.status] || "bg-slate-100 text-slate-500"}`}>
+                      {claim.status}
+                    </span>
+                    {claim.claimedAt && (
+                      <span className="text-xs text-slate-400 font-medium">
+                        {new Date(claim.claimedAt).toLocaleDateString([], { dateStyle: "long" })}
+                      </span>
+                    )}
+                  </div>
+                  
+                  <h2 className="text-2xl font-bold text-slate-800 mb-2">{claim.foodName}</h2>
+                  <div className="flex items-center gap-4 text-slate-500 font-medium">
+                     <span className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" /></svg>
+                        {claim.category}
+                     </span>
+                     <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                     <span>{claim.quantity}</span>
+                  </div>
+
+                  {donor && (
+                    <div className="mt-8 pt-6 border-t border-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div className="flex gap-3">
+                         <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                         </div>
+                         <div>
+                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Donor Store</div>
+                            <div className="text-sm font-bold text-slate-700">{donor.name}</div>
+                         </div>
+                      </div>
+                      <div className="flex gap-3">
+                         <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                         </div>
+                         <div>
+                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Address</div>
+                            <div className="text-sm font-medium text-slate-600 line-clamp-1">{donor.address}</div>
+                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {claim.rating && (
+                    <div className="mt-8 pt-6 border-t border-slate-50 flex items-start gap-4">
+                      <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 shrink-0">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      </div>
+                      <div>
+                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Your Rating</div>
+                        <div className="flex items-center gap-2">
+                           <div className="flex gap-0.5 text-amber-400 text-sm">
+                             {"★".repeat(claim.rating.stars)}{"☆".repeat(5 - claim.rating.stars)}
+                           </div>
+                           {claim.rating.comment && <span className="text-sm text-slate-500 italic">"{claim.rating.comment}"</span>}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-3 min-w-[160px]">
+                  {claim.status === "claimed" && (
+                    <>
+                      <button
+                        onClick={() => router.push(`/recipient/claim/${claim._id}`)}
+                        className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-slate-900/10"
+                      >
+                        Collection Details
+                      </button>
+                      <button
+                        onClick={() => handleUnclaim(claim._id)}
+                        disabled={processingId === claim._id}
+                        className="w-full h-11 bg-orange-50 hover:bg-orange-100 text-orange-600 font-bold rounded-xl text-xs transition-all disabled:opacity-50"
+                      >
+                        Cancel Claim
+                      </button>
+                    </>
+                  )}
+                  {claim.status === "collected" && !claim.rating && (
+                    <button
+                      onClick={() => openRatingModal(claim._id, claim.foodName)}
+                      className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      Rate Experience
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Rating modal */}
       {ratingModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-1">Rate this Donation</h2>
-            <p className="text-sm text-slate-500 mb-5">How was <span className="font-semibold text-slate-700">"{ratingModal.foodName}"</span>?</p>
-
-            <div className="mb-4">
-              <div className="text-sm font-medium text-slate-700 mb-2">Stars <span className="text-red-500">*</span></div>
-              <StarRating value={ratingStars} onChange={setRatingStars} />
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-10 transform transition-all">
+            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 mb-6 mx-auto">
+               <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
             </div>
+            <h2 className="text-2xl font-bold text-slate-800 text-center mb-1">Rate Donation</h2>
+            <p className="text-sm text-slate-500 text-center mb-8">How was <span className="font-bold text-slate-700">"{ratingModal.foodName}"</span>?</p>
 
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Comment <span className="text-slate-400 font-normal">(optional)</span></label>
-            <textarea
-              value={ratingComment}
-              onChange={(e) => setRatingComment(e.target.value)}
-              rows={3}
-              placeholder="Share your experience..."
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-300 resize-none"
-            />
-            {ratingError && <p className="text-red-500 text-xs mt-1">{ratingError}</p>}
+            <div className="space-y-6">
+              <div className="flex justify-center py-2">
+                <StarRating value={ratingStars} onChange={setRatingStars} />
+              </div>
 
-            <div className="flex gap-3 mt-5">
-              <button onClick={() => setRatingModal(null)} className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-sm transition-colors">Cancel</button>
-              <button onClick={handleRatingSubmit} disabled={ratingSubmitting} className="flex-1 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl text-sm transition-colors disabled:opacity-50">
-                {ratingSubmitting ? "Submitting…" : "Submit Rating"}
-              </button>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Share your thoughts</label>
+                <textarea
+                  value={ratingComment}
+                  onChange={(e) => setRatingComment(e.target.value)}
+                  rows={4}
+                  placeholder="Tell us about the collection process, food quality, etc."
+                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500/30 transition-all resize-none font-medium"
+                />
+              </div>
+              
+              {ratingError && <p className="text-red-500 text-xs text-center font-bold">{ratingError}</p>}
+
+              <div className="flex flex-col gap-3 pt-2">
+                <button onClick={handleRatingSubmit} disabled={ratingSubmitting} className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all disabled:opacity-50 shadow-xl shadow-slate-900/10">
+                  {ratingSubmitting ? "Submitting…" : "Submit Feedback"}
+                </button>
+                <button onClick={() => setRatingModal(null)} className="w-full py-3 bg-white text-slate-400 font-bold rounded-2xl hover:text-slate-600 transition-all text-sm">
+                  Discard
+                </button>
+              </div>
             </div>
           </div>
         </div>
