@@ -57,78 +57,76 @@ export default function RecipientLayout({ children }: { children: React.ReactNod
   const isRegisterPage = pathname === "/recipient/register";
 
   if (isRegisterPage) {
-    return <div className="min-h-screen bg-slate-50">{children}</div>;
+    return <div className="min-h-screen bg-[#f7f9ff]">{children}</div>;
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex-col hidden lg:flex">
-        <div className="p-6">
-          <Link href="/recipient" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
-              FB
-            </div>
-            <span className="text-xl font-bold text-white tracking-tight">FoodBridge</span>
-          </Link>
-        </div>
-
-        <nav className="flex-1 px-4 py-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? "bg-blue-600 text-white"
-                    : "hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className={isActive ? "text-white" : "text-slate-400 group-hover:text-slate-200"}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium">{item.name}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-slate-800">
-          <div className="px-4 py-3 text-xs text-slate-500 mb-2 truncate">
-            Logged in as {userName || "NGO Partner"}
-          </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Mobile Header */}
-        <header className="lg:hidden bg-white border-b border-slate-100 p-4 flex items-center justify-between">
+    <div className="flex flex-col min-h-screen bg-[#f7f9ff] font-sans text-[#151c23]">
+      {/* TopAppBar */}
+      <header className="h-[64px] bg-white border-b border-[#e2e8f0] flex items-center justify-between px-6 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sticky top-0 z-50">
+        <div className="flex items-center gap-6">
           <Link href="/recipient" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              FB
-            </div>
-            <span className="font-bold text-slate-800">FoodBridge NGO</span>
+             <span className="text-[20px] font-heading font-bold text-[#15803d] tracking-tight">FoodBridge</span>
           </Link>
-        </header>
-
-        <div className="flex-1 overflow-y-auto">
-          {children}
         </div>
-      </main>
+        <div className="flex items-center gap-4">
+           <div className="w-8 h-8 rounded-full border border-[#becabd] overflow-hidden bg-slate-100 flex items-center justify-center">
+             <span className="text-xs font-bold text-[#006a34]">
+               {userName ? userName.charAt(0).toUpperCase() : "U"}
+             </span>
+           </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-[256px] bg-[#f8f9fa] border-r border-[#e2e8f0] flex-col hidden lg:flex">
+          <nav className="flex-1 py-4 space-y-1">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <div key={item.href} className="px-[16px]">
+                  <Link
+                    href={item.href}
+                    className={`flex items-center gap-[12px] px-[12px] py-[12px] transition-all ${
+                      isActive
+                        ? "bg-[#f0fdf4] border-r-4 border-[#15803d] text-[#15803d] rounded-bl-[8px] rounded-tl-[8px] -mr-[16px]"
+                        : "text-[#64748b] hover:bg-slate-100 rounded-[8px]"
+                    }`}
+                  >
+                    <span className={isActive ? "text-[#15803d]" : "text-[#64748b]"}>
+                      {item.icon}
+                    </span>
+                    <span className={`font-heading ${isActive ? 'font-bold' : 'font-normal'} text-[14px]`}>{item.name}</span>
+                  </Link>
+                </div>
+              );
+            })}
+          </nav>
+          <div className="p-4 border-t border-[#becabd]">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-[12px] w-full px-[12px] py-[12px] text-[#64748b] hover:bg-slate-100 rounded-[8px] transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span className="font-heading font-normal text-[14px]">Logout</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto">
+          {/* Mobile Header */}
+          <header className="lg:hidden bg-white border-b border-[#e2e8f0] p-4 flex items-center justify-between">
+            <Link href="/recipient" className="flex items-center gap-2">
+              <span className="font-heading font-bold text-[#15803d]">FoodBridge NGO</span>
+            </Link>
+          </header>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
