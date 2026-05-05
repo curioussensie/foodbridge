@@ -89,91 +89,92 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex-col hidden lg:flex">
-        <div className="p-6">
+    <div className="flex flex-col min-h-screen bg-[#f7f9ff] font-sans text-[#151c23]">
+      {/* TopAppBar */}
+      <header className="h-[64px] bg-white border-b border-[#e2e8f0] flex items-center justify-between px-6 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sticky top-0 z-50">
+        <div className="flex items-center gap-6">
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-white font-bold text-xl">
-              FB
-            </div>
-            <span className="text-xl font-bold text-white tracking-tight">FoodBridge</span>
+             <div className="w-8 h-8 bg-[#268549] rounded-[8px] flex items-center justify-center text-[#f6fff3] font-heading font-bold text-sm shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
+               V
+             </div>
+             <span className="text-[20px] font-heading font-bold text-[#15803d] tracking-tight">FoodBridge</span>
           </Link>
         </div>
-
-        <nav className="flex-1 px-4 py-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  isActive
-                    ? "bg-amber-500 text-white"
-                    : "hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className={isActive ? "text-white" : "text-slate-400 group-hover:text-slate-200"}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium">{item.name}</span>
-                </div>
-                {item.badge && pendingCount > 0 && (
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    isActive ? "bg-white text-amber-600" : "bg-amber-500 text-white"
-                  }`}>
-                    {pendingCount}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-slate-800">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span className="font-medium">Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Mobile Header */}
-        <header className="lg:hidden bg-white border-b border-slate-100 p-4 flex items-center justify-between">
-          <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              FB
-            </div>
-            <span className="font-bold text-slate-800">FoodBridge Admin</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            {pendingCount > 0 && (
-              <Link href="/admin/pending" className="relative p-2 text-slate-500">
+        <div className="flex items-center gap-4">
+           {pendingCount > 0 && (
+              <Link href="/admin/pending" className="relative p-2 text-[#64748b] hover:text-[#15803d] transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 text-[10px] text-white font-bold rounded-full flex items-center justify-center border-2 border-white">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-[#b1241a] text-[10px] text-white font-bold rounded-full flex items-center justify-center border border-white">
                   {pendingCount}
                 </span>
               </Link>
-            )}
-            {/* Mobile menu button could go here */}
-          </div>
-        </header>
-
-        <div className="flex-1 overflow-y-auto">
-          {children}
+           )}
+           <div className="w-8 h-8 rounded-full border border-[#becabd] overflow-hidden bg-slate-100 flex items-center justify-center">
+             <span className="text-xs font-bold text-[#006a34]">A</span>
+           </div>
         </div>
-      </main>
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-[256px] bg-[#f8f9fa] border-r border-[#e2e8f0] flex-col hidden lg:flex">
+          <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <div key={item.href} className="px-[16px]">
+                  <Link
+                    href={item.href}
+                    className={`flex items-center justify-between gap-[12px] px-[12px] py-[12px] transition-all ${
+                      isActive
+                        ? "bg-[#f0fdf4] border-r-4 border-[#15803d] text-[#15803d] rounded-bl-[8px] rounded-tl-[8px] -mr-[16px]"
+                        : "text-[#64748b] hover:bg-slate-100 rounded-[8px]"
+                    }`}
+                  >
+                    <div className="flex items-center gap-[12px]">
+                      <span className={isActive ? "text-[#15803d]" : "text-[#64748b]"}>
+                        {item.icon}
+                      </span>
+                      <span className={`font-heading ${isActive ? 'font-bold' : 'font-normal'} text-[14px]`}>{item.name}</span>
+                    </div>
+                    {item.badge && pendingCount > 0 && (
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        isActive ? "bg-[#15803d] text-white" : "bg-[#fea520] text-[#694000]"
+                      }`}>
+                        {pendingCount}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+              );
+            })}
+          </nav>
+          <div className="p-4 border-t border-[#becabd]">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-[12px] w-full px-[12px] py-[12px] text-[#64748b] hover:bg-slate-100 rounded-[8px] transition-all"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span className="font-heading font-normal text-[14px]">Logout</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto">
+          {/* Mobile Header */}
+          <header className="lg:hidden bg-white border-b border-[#e2e8f0] p-4 flex items-center justify-between">
+            <Link href="/admin" className="flex items-center gap-2">
+              <span className="font-heading font-bold text-[#15803d]">FoodBridge Admin</span>
+            </Link>
+          </header>
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
