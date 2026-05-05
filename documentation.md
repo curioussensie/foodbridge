@@ -6,7 +6,7 @@ This document outlines the technical implementation details for the **FoodBridge
 
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS (Section 8 UI/UX Guidelines: Amber/Slate palette, rounded-2xl corners, soft shadows)
+- **Styling:** Tailwind CSS (Section 7 UI/UX Guidelines: Green/Slate palette, rounded-[16px] corners, soft green shadows)
 - **Database:** MongoDB (Mongoose ODM)
 - **Authentication:** Custom JWT-based stateless authentication using `jsonwebtoken` and `bcrypt`. Stored in HTTP-only, secure cookies.
 - **Route Protection:** Handled via Next.js Edge Middleware (`proxy.ts`), protecting `/donor`, `/recipient`, and `/admin` routes.
@@ -280,3 +280,19 @@ Represents a food donation post.
 - **API:** `PATCH /api/listings/[id]/unclaim`. Resets listing status to "available" and removes the `recipientId`. Validates the listing is currently in "claimed" status.
 - **UI:** Added a "Cancel Claim" button to the Claim History page for any listing with "claimed" status.
 - **AC Fulfilled:** Recipients can return a claimed item to the available pool if they can no longer collect it.
+
+---
+
+## 7. UI/UX Non-Functional Requirements (Figma Redesign)
+
+### NFR-UI: "Vital Harvest Ecosystem" Design System Integration
+
+- **Objective:** Redesign the entire frontend to align with the provided Figma high-fidelity prototypes, migrating away from the generic Amber/Slate template to a premium Green/Slate aesthetic.
+- **Typography:** Integrated `Plus_Jakarta_Sans` for bold, impactful headings and `Inter` for clean, legible body text.
+- **Color Palette:**
+  - **Primary Accent:** Green (`#006a34`) used for buttons, active tabs, and highlights.
+  - **Secondary Accents:** Amber (`#fea520`) for ranking/badges, Light Green (`#f0fdf4`) for active background states.
+  - **Surfaces:** Pure White (`#ffffff`) for cards/components, light slate (`#f7f9ff`, `#f8f9fa`) for page backgrounds and sidebars.
+- **Component Geometry:** Sharp, modern corner radii (e.g., `rounded-[16px]`, `rounded-[8px]`), replacing generic `2xl` Tailwind classes.
+- **Elevation/Depth:** Soft, green-tinted shadows (e.g., `shadow-[0px_4px_20px_0px_rgba(0,106,52,0.04)]`) and structured 1px slate borders (`#e2e8f0`, `#becabd`) for card elevation and layout separation.
+- **Implementation Scope:** Landing Page (`app/page.tsx`), Recipient Browse Dashboard (`app/recipient/browse/page.tsx`), and corresponding Layouts (`app/layout.tsx`, `app/recipient/layout.tsx`). Logical backend integration (API fetching, filtering, JWT auth) was preserved perfectly without disruption.
