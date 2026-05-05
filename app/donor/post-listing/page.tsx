@@ -61,16 +61,16 @@ export default function PostListingPage() {
 
   if (status === "success") {
     return (
-      <div className="p-6 lg:p-20 flex flex-col items-center justify-center min-h-[80vh]">
-        <div className="bg-white max-w-md w-full p-12 rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 text-center space-y-8">
-          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10">
+      <div className="p-6 lg:p-20 flex flex-col items-center justify-center min-h-[80vh] font-['Inter']">
+        <div className="bg-white max-w-md w-full p-12 rounded-[16px] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] border border-[#dbe3ed] text-center space-y-8">
+          <div className="w-20 h-20 bg-[rgba(38,133,73,0.1)] text-[#006a34] rounded-[12px] flex items-center justify-center mx-auto shadow-sm">
             <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <div>
-             <h2 className="text-3xl font-black text-slate-800 tracking-tight mb-2">Success!</h2>
-             <p className="text-slate-500 leading-relaxed font-medium">Your donation is now live and waiting for a recipient to claim it.</p>
+             <h2 className="text-[24px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] mb-2">Success!</h2>
+             <p className="text-[#6f7a6f] text-[14px] leading-relaxed font-medium">Your donation is now live and waiting for a recipient to claim it.</p>
           </div>
           <div className="space-y-3 pt-4">
             <button
@@ -85,13 +85,13 @@ export default function PostListingPage() {
                 });
                 setStatus("idle");
               }}
-              className="w-full h-14 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-amber-500/20"
+              className="w-full h-[48px] bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] transition-colors shadow-[0px_4px_10px_rgba(0,106,52,0.15)] text-[14px]"
             >
               Post Another Item
             </button>
             <button
               onClick={() => router.push("/donor")}
-              className="w-full h-14 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold rounded-2xl transition-all"
+              className="w-full h-[48px] bg-[#f7f9ff] border border-[#dbe3ed] hover:bg-[#e7eff9] text-[#3f4940] font-semibold rounded-[8px] transition-colors text-[14px]"
             >
               Go to Overview
             </button>
@@ -102,24 +102,24 @@ export default function PostListingPage() {
   }
 
   return (
-    <div className="p-6 lg:p-12 max-w-4xl mx-auto">
-      <div className="bg-white rounded-[2.5rem] shadow-xl shadow-amber-900/5 border border-slate-100 overflow-hidden">
+    <div className="p-6 lg:p-12 max-w-4xl mx-auto font-['Inter']">
+      <div className="bg-white rounded-[16px] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] border border-[#dbe3ed] overflow-hidden">
         <div className="p-8 sm:p-12">
           <div className="mb-12 text-center">
-            <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-3">Post a Donation</h1>
-            <p className="text-slate-500 font-medium leading-relaxed max-w-md mx-auto">Help reduce food waste by sharing your surplus items with those in need.</p>
+            <h1 className="text-[32px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] tracking-tight mb-3">Post a Donation</h1>
+            <p className="text-[#6f7a6f] text-[14px] font-medium leading-relaxed max-w-md mx-auto">Help reduce food waste by sharing your surplus items with those in need.</p>
           </div>
 
           {status === "error" && (
-            <div className="mb-10 p-5 bg-red-50 border border-red-100 text-red-600 rounded-2xl font-bold text-sm text-center">
+            <div className="mb-10 p-4 bg-[rgba(212,62,48,0.1)] border border-[#d43e30]/20 text-[#b1241a] rounded-[8px] font-semibold text-[14px] text-center">
               {errorMessage}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="foodName">
+                <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="foodName">
                   What are you donating?
                 </label>
                 <input
@@ -129,13 +129,13 @@ export default function PostListingPage() {
                   required
                   value={formData.foodName}
                   onChange={handleChange}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                  className="w-full px-4 py-3 bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] placeholder:text-[#8a968a] text-[14px]"
                   placeholder="e.g. 10 Loaves of Fresh Sourdough"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="quantity">
+                <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="quantity">
                   Quantity
                 </label>
                 <input
@@ -145,13 +145,13 @@ export default function PostListingPage() {
                   required
                   value={formData.quantity}
                   onChange={handleChange}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                  className="w-full px-4 py-3 bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] placeholder:text-[#8a968a] text-[14px]"
                   placeholder="e.g. 5 kg or 10 boxes"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="category">
+                <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="category">
                   Category
                 </label>
                 <select
@@ -160,7 +160,7 @@ export default function PostListingPage() {
                   required
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 bg-white"
+                  className="w-full px-4 py-3 bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] text-[14px]"
                 >
                   <option value="" disabled>Select category</option>
                   {categories.map((cat) => (
@@ -169,16 +169,16 @@ export default function PostListingPage() {
                 </select>
               </div>
 
-              <div className="md:col-span-2 pt-4">
-                 <h3 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <span className="w-6 h-6 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-[10px]">
-                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div className="md:col-span-2 pt-2">
+                 <h3 className="text-[14px] font-semibold text-[#151c23] font-['Plus_Jakarta_Sans'] mb-4 flex items-center gap-2">
+                    <span className="w-8 h-8 bg-[rgba(254,165,32,0.2)] text-[#865300] rounded-[6px] flex items-center justify-center">
+                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </span>
                     Collection Window
                  </h3>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-[#dbe3ed] bg-[#f7f9ff] rounded-[8px]">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="pickupStartTime">
+                      <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="pickupStartTime">
                         Starts From
                       </label>
                       <input
@@ -188,12 +188,12 @@ export default function PostListingPage() {
                         required
                         value={formData.pickupStartTime}
                         onChange={handleChange}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                        className="w-full px-4 py-3 bg-white border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] text-[14px]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="pickupEndTime">
+                      <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="pickupEndTime">
                         Ends At
                       </label>
                       <input
@@ -203,15 +203,15 @@ export default function PostListingPage() {
                         required
                         value={formData.pickupEndTime}
                         onChange={handleChange}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800"
+                        className="w-full px-4 py-3 bg-white border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] text-[14px]"
                       />
                     </div>
                  </div>
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" htmlFor="photoUrl">
-                  Photo URL <span className="text-slate-300 font-normal italic lowercase">(Optional)</span>
+                <label className="block text-[12px] font-semibold text-[#3f4940] uppercase tracking-[0.6px] mb-2" htmlFor="photoUrl">
+                  Photo URL <span className="text-[#8a968a] font-normal lowercase">(Optional)</span>
                 </label>
                 <input
                   id="photoUrl"
@@ -219,17 +219,17 @@ export default function PostListingPage() {
                   type="url"
                   value={formData.photoUrl}
                   onChange={handleChange}
-                  className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:border-amber-500 focus:ring-4 focus:ring-amber-500/5 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                  className="w-full px-4 py-3 bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] placeholder:text-[#8a968a] text-[14px]"
                   placeholder="https://images.unsplash.com/..."
                 />
               </div>
             </div>
 
-            <div className="pt-6">
+            <div className="pt-6 border-t border-[#dbe3ed]">
                <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full h-16 bg-slate-900 hover:bg-amber-500 text-white font-black rounded-2xl transition-all shadow-xl shadow-slate-900/10 hover:shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-3 uppercase tracking-widest text-sm"
+                  className="w-full h-[48px] bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] transition-all shadow-[0px_4px_10px_rgba(0,106,52,0.15)] disabled:opacity-50 flex items-center justify-center gap-2 text-[16px]"
                >
                   {status === "loading" ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -239,7 +239,7 @@ export default function PostListingPage() {
                     </>
                   )}
                </button>
-               <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-6">
+               <p className="text-center text-[12px] text-[#6f7a6f] font-medium mt-4">
                   By posting, you agree to our food safety guidelines.
                </p>
             </div>
