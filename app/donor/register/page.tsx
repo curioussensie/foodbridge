@@ -40,10 +40,15 @@ export default function DonorRegisterPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        throw new Error("Server returned an invalid response. Please check backend logs.");
+      }
 
       if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
+        throw new Error(data?.error || "Registration failed");
       }
 
       setStatus("success");

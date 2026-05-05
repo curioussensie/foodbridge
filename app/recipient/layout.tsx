@@ -65,7 +65,10 @@ export default function RecipientLayout({ children }: { children: React.ReactNod
       {/* TopAppBar */}
       <header className="h-[64px] bg-white border-b border-[#e2e8f0] flex items-center justify-between px-6 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sticky top-0 z-50">
         <div className="flex items-center gap-6">
-          <Link href="/recipient" className="flex items-center gap-2">
+          <Link href="/recipient" className="flex items-center gap-3">
+             <div className="w-8 h-8 bg-[#268549] rounded-[8px] flex items-center justify-center text-[#f6fff3] font-heading font-bold text-sm shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
+               V
+             </div>
              <span className="text-[20px] font-heading font-bold text-[#15803d] tracking-tight">FoodBridge</span>
           </Link>
         </div>
