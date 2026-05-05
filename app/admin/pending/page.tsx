@@ -38,8 +38,6 @@ export default function AdminPendingPage() {
   useEffect(() => {
     async function loadUsers() {
       try {
-        // fetch users with status pending
-
         const res = await fetch("/api/admin/users?status=pending");
         if (res.status === 401 || res.status === 403) {
           router.push("/login");
@@ -102,12 +100,12 @@ export default function AdminPendingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 py-8">
+    <div className="min-h-screen bg-transparent p-4 py-8 font-['Inter']">
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
+        <div className="bg-white rounded-[12px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] p-6 sm:p-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600">
+            <div className="w-10 h-10 bg-[rgba(254,165,32,0.2)] rounded-[8px] flex items-center justify-center text-[#694000]">
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -123,15 +121,15 @@ export default function AdminPendingPage() {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">
+              <h1 className="text-[24px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans']">
                 Pending Registrations
               </h1>
-              <p className="text-slate-500 text-sm mt-0.5">
+              <p className="text-[#6f7a6f] text-[14px] mt-0.5">
                 Review and approve or reject new account requests.
               </p>
             </div>
             {!loading && (
-              <span className="ml-auto text-sm font-semibold bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
+              <span className="ml-auto text-[12px] font-semibold bg-[rgba(254,165,32,0.2)] text-[#694000] px-3 py-1 rounded-[6px]">
                 {users.length} pending
               </span>
             )}
@@ -140,17 +138,17 @@ export default function AdminPendingPage() {
 
         {loading ? (
           <div className="flex justify-center p-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-500" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#006a34]" />
           </div>
         ) : error ? (
-          <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-200">
+          <div className="p-4 bg-[rgba(212,62,48,0.1)] text-[#b1241a] rounded-[12px] border border-[#d43e30]/20">
             {error}
           </div>
         ) : users.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-16 text-center">
-            <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white rounded-[12px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] p-16 text-center">
+            <div className="w-14 h-14 bg-[rgba(38,133,73,0.1)] rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-7 h-7 text-emerald-600"
+                className="w-7 h-7 text-[#006a34]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -163,10 +161,10 @@ export default function AdminPendingPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-slate-800">
+            <h3 className="text-[18px] font-semibold text-[#151c23] font-['Plus_Jakarta_Sans']">
               All caught up!
             </h3>
-            <p className="text-slate-500 mt-1">
+            <p className="text-[#6f7a6f] mt-1 text-[14px]">
               No pending registrations to review.
             </p>
           </div>
@@ -191,35 +189,35 @@ export default function AdminPendingPage() {
               return (
                 <div
                   key={user._id}
-                  className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+                  className="bg-white rounded-[12px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] overflow-hidden"
                 >
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       <div className="flex items-start gap-4">
                         <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm ${user.role === "Donor" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                          className={`w-10 h-10 rounded-[8px] flex items-center justify-center shrink-0 font-bold text-[14px] font-['Plus_Jakarta_Sans'] ${user.role === "Donor" ? "bg-[rgba(254,165,32,0.2)] text-[#694000]" : "bg-[rgba(38,133,73,0.2)] text-[#006a34]"}`}
                         >
-                          {user.role === "Donor" ? "D" : "N"}
+                          {user.role === "Donor" ? "D" : "R"}
                         </div>
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-bold text-slate-800">
+                            <h3 className="font-semibold text-[#151c23] font-['Plus_Jakarta_Sans'] text-[16px]">
                               {name || "—"}
                             </h3>
                             <span
-                              className={`text-xs px-2 py-0.5 rounded-full font-medium ${user.role === "Donor" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                              className={`text-[10px] px-2 py-0.5 rounded-[4px] font-semibold uppercase tracking-wider ${user.role === "Donor" ? "bg-[rgba(254,165,32,0.2)] text-[#694000]" : "bg-[rgba(38,133,73,0.2)] text-[#006a34]"}`}
                             >
                               {user.role === "Donor"
-                                ? "Restaurant / Donor"
-                                : "NGO / Recipient"}
+                                ? "Donor"
+                                : "Recipient"}
                             </span>
                           </div>
-                          <p className="text-sm text-slate-500 mt-0.5">
+                          <p className="text-[14px] text-[#6f7a6f] mt-0.5">
                             {user.email}
                           </p>
                         </div>
                       </div>
-                      <p className="text-xs text-slate-400 sm:text-right shrink-0">
+                      <p className="text-[12px] text-[#6f7a6f] sm:text-right shrink-0">
                         Registered{" "}
                         {new Date(user.createdAt).toLocaleDateString([], {
                           dateStyle: "medium",
@@ -228,44 +226,44 @@ export default function AdminPendingPage() {
                     </div>
 
                     {/* Profile Details */}
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 bg-slate-50 rounded-xl p-4 text-sm">
+                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 bg-[#f7f9ff] rounded-[8px] p-4 text-[14px] border border-[#dbe3ed]">
                       {address && (
-                        <div className="flex gap-2 text-slate-600">
-                          <span className="text-slate-400 shrink-0">
+                        <div className="flex gap-2 text-[#3f4940]">
+                          <span className="text-[#6f7a6f] shrink-0 font-medium w-24">
                             Address
                           </span>
-                          <span className="font-medium text-slate-700">
+                          <span className="font-medium text-[#151c23]">
                             {address}
                           </span>
                         </div>
                       )}
                       {contact && (
-                        <div className="flex gap-2 text-slate-600">
-                          <span className="text-slate-400 shrink-0">
+                        <div className="flex gap-2 text-[#3f4940]">
+                          <span className="text-[#6f7a6f] shrink-0 font-medium w-24">
                             Contact
                           </span>
-                          <span className="font-medium text-slate-700">
+                          <span className="font-medium text-[#151c23]">
                             {contact}
                           </span>
                         </div>
                       )}
                       {user.role === "Donor" && user.donorProfile?.foodType && (
-                        <div className="flex gap-2 text-slate-600">
-                          <span className="text-slate-400 shrink-0">
+                        <div className="flex gap-2 text-[#3f4940]">
+                          <span className="text-[#6f7a6f] shrink-0 font-medium w-24">
                             Food Type
                           </span>
-                          <span className="font-medium text-slate-700">
+                          <span className="font-medium text-[#151c23]">
                             {user.donorProfile.foodType}
                           </span>
                         </div>
                       )}
                       {user.role === "Recipient" &&
                         user.ngoProfile?.contactPerson && (
-                          <div className="flex gap-2 text-slate-600">
-                            <span className="text-slate-400 shrink-0">
-                              Contact Person
+                          <div className="flex gap-2 text-[#3f4940]">
+                            <span className="text-[#6f7a6f] shrink-0 font-medium w-24">
+                              Contact
                             </span>
-                            <span className="font-medium text-slate-700">
+                            <span className="font-medium text-[#151c23]">
                               {user.ngoProfile.contactPerson}
                             </span>
                           </div>
@@ -284,14 +282,14 @@ export default function AdminPendingPage() {
                           setRejectError("");
                         }}
                         disabled={processingId === user._id}
-                        className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl text-sm transition-colors disabled:opacity-50"
+                        className="px-4 py-2 bg-[rgba(212,62,48,0.1)] hover:bg-[rgba(212,62,48,0.2)] text-[#b1241a] font-semibold rounded-[8px] text-[14px] transition-colors disabled:opacity-50"
                       >
                         Reject
                       </button>
                       <button
                         onClick={() => handleApprove(user._id)}
                         disabled={processingId === user._id}
-                        className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-xl text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                        className="px-4 py-2 bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] text-[14px] transition-colors disabled:opacity-50 flex items-center gap-2"
                       >
                         {processingId === user._id ? (
                           <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -323,21 +321,21 @@ export default function AdminPendingPage() {
 
       {/* Reject Modal */}
       {rejectModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-slate-800 mb-1">
+        <div className="fixed inset-0 bg-[#151c23]/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.1)] w-full max-w-md p-6">
+            <h2 className="text-[20px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] mb-1">
               Reject Registration
             </h2>
-            <p className="text-sm text-slate-500 mb-4">
+            <p className="text-[14px] text-[#6f7a6f] mb-4">
               Rejecting{" "}
-              <span className="font-medium text-slate-700">
+              <span className="font-medium text-[#151c23]">
                 {rejectModal.email}
               </span>
               . They will see this reason when trying to log in.
             </p>
 
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Reason <span className="text-red-500">*</span>
+            <label className="block text-[14px] font-medium text-[#3f4940] mb-1.5">
+              Reason <span className="text-[#b1241a]">*</span>
             </label>
             <textarea
               value={rejectReason}
@@ -347,23 +345,23 @@ export default function AdminPendingPage() {
               }}
               rows={3}
               placeholder="e.g. Incomplete information provided. Please re-register with a valid address."
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-300 resize-none"
+              className="w-full border border-[#dbe3ed] rounded-[8px] px-4 py-3 text-[14px] text-[#151c23] focus:outline-none focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] resize-none"
             />
             {rejectError && (
-              <p className="text-red-500 text-xs mt-1">{rejectError}</p>
+              <p className="text-[#b1241a] text-[12px] mt-1">{rejectError}</p>
             )}
 
             <div className="flex gap-3 mt-5">
               <button
                 onClick={() => setRejectModal(null)}
-                className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-sm transition-colors"
+                className="flex-1 px-4 py-2.5 bg-[#f7f9ff] hover:bg-[#e7eff9] text-[#3f4940] font-semibold rounded-[8px] text-[14px] transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleRejectSubmit}
                 disabled={processingId !== null}
-                className="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl text-sm transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 bg-[#d43e30] hover:bg-[#b1241a] text-white font-semibold rounded-[8px] text-[14px] transition-colors disabled:opacity-50"
               >
                 Confirm Rejection
               </button>

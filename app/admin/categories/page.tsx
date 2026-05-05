@@ -98,19 +98,19 @@ export default function AdminCategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-4 py-8">
+    <div className="min-h-screen bg-transparent p-4 py-8 font-['Inter']">
       <div className="max-w-2xl mx-auto space-y-6">
 
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
+        <div className="bg-white rounded-[12px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center text-violet-600">
+            <div className="w-10 h-10 bg-[#e7eff9] rounded-[8px] flex items-center justify-center text-[#151c23]">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">Category Management</h1>
-              <p className="text-slate-500 text-sm mt-0.5">Add, rename, or deactivate food categories.</p>
+              <h1 className="text-[24px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans']">Category Management</h1>
+              <p className="text-[#6f7a6f] text-[14px] mt-0.5">Add, rename, or deactivate food categories.</p>
             </div>
           </div>
 
@@ -122,32 +122,32 @@ export default function AdminCategoriesPage() {
               onChange={(e) => { setNewName(e.target.value); setAddError(""); }}
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
               placeholder="New category name..."
-              className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-300"
+              className="flex-1 border border-[#dbe3ed] rounded-[8px] px-4 py-2.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[rgba(38,133,73,0.3)]"
             />
             <button
               onClick={handleAdd}
               disabled={adding}
-              className="px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50"
+              className="px-5 py-2.5 bg-[#006a34] hover:bg-[#00552a] text-white text-[14px] font-semibold rounded-[8px] transition-colors disabled:opacity-50"
             >
               {adding ? "Adding…" : "Add"}
             </button>
           </div>
-          {addError && <p className="text-red-500 text-xs mb-4">{addError}</p>}
+          {addError && <p className="text-[#b1241a] text-[12px] mb-4">{addError}</p>}
         </div>
 
         {loading ? (
-          <div className="flex justify-center p-16"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500" /></div>
+          <div className="flex justify-center p-16"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#006a34]" /></div>
         ) : error ? (
-          <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-200">{error}</div>
+          <div className="p-4 bg-[rgba(212,62,48,0.1)] text-[#b1241a] rounded-[12px] border border-[#d43e30]/20">{error}</div>
         ) : (
-          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider font-semibold text-slate-500 flex justify-between">
+          <div className="bg-white rounded-[12px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] overflow-hidden">
+            <div className="px-6 py-3 bg-[#f7f9ff] border-b border-[#dbe3ed] text-[12px] uppercase tracking-wider font-semibold text-[#6f7a6f] flex justify-between">
               <span>Category</span>
               <span>{categories.length} total · {categories.filter(c => c.active).length} active</span>
             </div>
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-[#dbe3ed]">
               {categories.map((cat) => (
-                <li key={cat._id} className="flex items-center gap-3 px-6 py-3.5">
+                <li key={cat._id} className="flex items-center gap-3 px-6 py-3.5 hover:bg-[#f7f9ff] transition-colors">
                   {editingId === cat._id ? (
                     <div className="flex-1 flex gap-2">
                       <input
@@ -156,31 +156,31 @@ export default function AdminCategoriesPage() {
                         onChange={(e) => { setEditName(e.target.value); setEditError(""); }}
                         onKeyDown={(e) => e.key === "Enter" && handleRename(cat._id)}
                         autoFocus
-                        className="flex-1 border border-violet-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-200"
+                        className="flex-1 border border-[#006a34] rounded-[6px] px-3 py-1.5 text-[14px] focus:outline-none focus:ring-2 focus:ring-[rgba(38,133,73,0.3)]"
                       />
-                      <button onClick={() => handleRename(cat._id)} disabled={processingId === cat._id} className="text-xs font-semibold px-3 py-1.5 bg-violet-600 text-white rounded-lg hover:bg-violet-700 disabled:opacity-50">Save</button>
-                      <button onClick={() => { setEditingId(null); setEditError(""); }} className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200">Cancel</button>
+                      <button onClick={() => handleRename(cat._id)} disabled={processingId === cat._id} className="text-[12px] font-semibold px-3 py-1.5 bg-[#006a34] text-white rounded-[6px] hover:bg-[#00552a] disabled:opacity-50">Save</button>
+                      <button onClick={() => { setEditingId(null); setEditError(""); }} className="text-[12px] font-semibold px-3 py-1.5 bg-[#f7f9ff] border border-[#dbe3ed] text-[#3f4940] rounded-[6px] hover:bg-[#e7eff9]">Cancel</button>
                     </div>
                   ) : (
                     <>
-                      <span className={`flex-1 text-sm font-medium ${cat.active ? "text-slate-800" : "text-slate-400 line-through"}`}>
+                      <span className={`flex-1 text-[14px] font-medium ${cat.active ? "text-[#151c23]" : "text-[#8a968a] line-through"}`}>
                         {cat.name}
                       </span>
-                      {!cat.active && <span className="text-xs text-orange-500 font-medium bg-orange-50 px-2 py-0.5 rounded-full">Inactive</span>}
+                      {!cat.active && <span className="text-[10px] text-[#865300] font-semibold bg-[rgba(254,165,32,0.1)] px-2 py-0.5 rounded-[4px] uppercase tracking-wider">Inactive</span>}
                       <button
                         onClick={() => { setEditingId(cat._id); setEditName(cat.name); setEditError(""); }}
-                        className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                        className="text-[12px] font-semibold px-3 py-1.5 bg-[#f7f9ff] border border-[#dbe3ed] text-[#3f4940] hover:bg-[#e7eff9] rounded-[6px] transition-colors"
                       >Rename</button>
                       <button
                         onClick={() => handleToggle(cat._id, cat.active)}
                         disabled={processingId === cat._id}
-                        className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 ${cat.active ? "bg-orange-100 text-orange-700 hover:bg-orange-200" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"}`}
+                        className={`text-[12px] font-semibold px-3 py-1.5 rounded-[6px] transition-colors disabled:opacity-50 ${cat.active ? "bg-[rgba(254,165,32,0.1)] text-[#865300] hover:bg-[rgba(254,165,32,0.2)]" : "bg-[rgba(38,133,73,0.1)] text-[#006a34] hover:bg-[rgba(38,133,73,0.2)]"}`}
                       >
                         {cat.active ? "Deactivate" : "Activate"}
                       </button>
                     </>
                   )}
-                  {editError && editingId === cat._id && <p className="text-red-500 text-xs mt-1">{editError}</p>}
+                  {editError && editingId === cat._id && <p className="text-[#b1241a] text-[12px] mt-1">{editError}</p>}
                 </li>
               ))}
             </ul>
