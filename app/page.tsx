@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import Image from "next/image";
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#f7f9ff] text-[#151c23] selection:bg-[#e7eff9] selection:text-[#006a34]">
@@ -7,8 +7,8 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-[rgba(190,202,189,0.3)] shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
         <div className="max-w-[1280px] mx-auto px-6 h-[64px] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#268549] rounded-[8px] flex items-center justify-center text-[#f6fff3] font-heading font-bold text-xl shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
-              V
+            <div className="w-10 h-10 rounded-[8px] relative overflow-hidden shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
+              <Image src="/foodbridge-logo.jpeg" alt="FoodBridge Logo" fill className="object-cover" />
             </div>
             <div className="flex flex-col">
               <span className="text-[20px] font-heading font-semibold text-[#15803d] tracking-[-0.5px] leading-none mb-1">FoodBridge</span>
@@ -54,7 +54,7 @@ export default function Home() {
             <div className="absolute inset-0 bg-[rgba(154,247,175,0.2)] rounded-[24px] blur-[40px] group-hover:bg-[rgba(154,247,175,0.3)] transition-all duration-700"></div>
             <div className="relative bg-white p-[24px] rounded-[12px] border border-[rgba(190,202,189,0.3)] shadow-[0px_4px_20px_0px_rgba(0,106,52,0.04)] aspect-square overflow-hidden">
                <img 
-                 src="https://images.unsplash.com/photo-1488459711615-228f19503358?q=80&w=2070&auto=format&fit=crop" 
+                 src="/fb-hero.png" 
                  alt="Fresh Food" 
                  className="w-full h-full object-cover rounded-[8px] grayscale-[10%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-[1.02]"
                />

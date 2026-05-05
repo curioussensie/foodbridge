@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const navItems = [
@@ -67,17 +68,17 @@ export default function DonorLayout({ children }: { children: React.ReactNode })
       <header className="h-[64px] bg-white border-b border-[#e2e8f0] flex items-center justify-between px-6 drop-shadow-[0px_1px_1px_rgba(0,0,0,0.05)] sticky top-0 z-50">
         <div className="flex items-center gap-6">
           <Link href="/donor" className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-[#268549] rounded-[8px] flex items-center justify-center text-[#f6fff3] font-heading font-bold text-sm shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
-               V
+             <div className="w-8 h-8 rounded-[8px] relative overflow-hidden shadow-[0px_4px_10px_rgba(0,106,52,0.1)]">
+               <Image src="/foodbridge-logo.jpeg" alt="FoodBridge Logo" fill className="object-cover" />
              </div>
              <span className="text-[20px] font-heading font-bold text-[#15803d] tracking-tight">FoodBridge</span>
           </Link>
         </div>
         <div className="flex items-center gap-4">
-           <div className="w-8 h-8 rounded-full border border-[#becabd] overflow-hidden bg-slate-100 flex items-center justify-center">
-             <span className="text-xs font-bold text-[#006a34]">
-               {userName ? userName.charAt(0).toUpperCase() : "D"}
-             </span>
+           <div className="w-8 h-8 rounded-full border border-[#becabd] overflow-hidden bg-[#f7f9ff] flex items-center justify-center">
+             <svg className="w-4 h-4 text-[#006a34]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+             </svg>
            </div>
         </div>
       </header>
