@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const STATUS_STYLES: Record<string, string> = {
-  claimed: "bg-blue-50 text-blue-700",
-  collected: "bg-emerald-50 text-emerald-700",
-  available: "bg-slate-100 text-slate-500",
-  cancelled: "bg-orange-50 text-orange-700",
-  removed: "bg-red-50 text-red-600",
+  claimed: "bg-[rgba(254,165,32,0.2)] text-[#865300]",
+  collected: "bg-[rgba(38,133,73,0.1)] text-[#006a34]",
+  available: "bg-[#e7eff9] text-[#3f4940]",
+  cancelled: "bg-[rgba(212,62,48,0.1)] text-[#b1241a]",
+  removed: "bg-[rgba(212,62,48,0.1)] text-[#b1241a]",
 };
 
 type Claim = {
@@ -26,7 +26,7 @@ type Claim = {
 function StarRating({ value, onChange }: { value: number; onChange: (n: number) => void }) {
   const [hovered, setHovered] = useState(0);
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((n) => (
         <button
           key={n}
@@ -34,9 +34,9 @@ function StarRating({ value, onChange }: { value: number; onChange: (n: number) 
           onClick={() => onChange(n)}
           onMouseEnter={() => setHovered(n)}
           onMouseLeave={() => setHovered(0)}
-          className="text-2xl leading-none transition-colors"
+          className="text-2xl leading-none transition-colors focus:outline-none"
         >
-          <span className={(hovered || value) >= n ? "text-amber-400" : "text-slate-200"}>★</span>
+          <span className={(hovered || value) >= n ? "text-[#fea520]" : "text-[#dbe3ed]"}>★</span>
         </button>
       ))}
     </div>
@@ -121,31 +121,31 @@ export default function ClaimHistoryPage() {
   const collected = claims.filter((c) => c.status === "collected").length;
 
   return (
-    <div className="p-6 lg:p-10 space-y-10">
+    <div className="p-6 lg:p-10 space-y-10 font-['Inter']">
       {/* Header */}
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
+      <div className="bg-white rounded-[16px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] p-8 flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm shadow-blue-500/5">
+          <div className="w-12 h-12 bg-[rgba(38,133,73,0.1)] rounded-[12px] flex items-center justify-center text-[#006a34] shadow-sm">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-slate-800 tracking-tight">My Claim History</h1>
-            <p className="text-slate-500 mt-1">Track all your food rescues and contributions.</p>
+            <h1 className="text-[28px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] tracking-tight">My Claim History</h1>
+            <p className="text-[#6f7a6f] text-[14px] mt-1">Track all your food rescues and contributions.</p>
           </div>
         </div>
 
         {!loading && (
-          <div className="flex items-center gap-8 px-8 py-4 bg-slate-50 rounded-2xl border border-slate-100/50">
+          <div className="flex items-center gap-8 px-8 py-4 bg-[#f7f9ff] rounded-[12px] border border-[#dbe3ed]">
             <div className="text-center">
-              <div className="text-3xl font-black text-slate-800">{totalClaims}</div>
-              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Total Claims</div>
+              <div className="text-[28px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans']">{totalClaims}</div>
+              <div className="text-[10px] text-[#8a968a] font-bold uppercase tracking-widest mt-1">Total Claims</div>
             </div>
-            <div className="w-px h-10 bg-slate-200" />
+            <div className="w-px h-10 bg-[#dbe3ed]" />
             <div className="text-center">
-              <div className="text-3xl font-black text-emerald-600">{collected}</div>
-              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Collected</div>
+              <div className="text-[28px] font-bold text-[#006a34] font-['Plus_Jakarta_Sans']">{collected}</div>
+              <div className="text-[10px] text-[#8a968a] font-bold uppercase tracking-widest mt-1">Collected</div>
             </div>
           </div>
         )}
@@ -153,84 +153,84 @@ export default function ClaimHistoryPage() {
 
       {loading ? (
         <div className="flex justify-center p-24">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#006a34]"></div>
         </div>
       ) : error ? (
-        <div className="p-6 bg-red-50 text-red-600 rounded-2xl border border-red-100 font-medium">{error}</div>
+        <div className="p-4 bg-[rgba(212,62,48,0.1)] text-[#b1241a] rounded-[8px] border border-[#d43e30]/20 font-medium text-[14px]">{error}</div>
       ) : claims.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-20 text-center">
-          <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
+        <div className="bg-white rounded-[16px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] p-20 text-center">
+          <div className="w-20 h-20 bg-[#f7f9ff] rounded-full flex items-center justify-center mx-auto mb-6 text-[#8a968a]">
              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
              </svg>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800">No claims yet</h3>
-          <p className="text-slate-500 mt-2 max-w-md mx-auto mb-8">You haven't claimed any donations yet. Start making an impact today!</p>
-          <button onClick={() => router.push("/recipient/browse")} className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all">Browse Listings</button>
+          <h3 className="text-[24px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans']">No claims yet</h3>
+          <p className="text-[#6f7a6f] text-[14px] mt-2 max-w-md mx-auto mb-8">You haven't claimed any donations yet. Start making an impact today!</p>
+          <button onClick={() => router.push("/recipient/browse")} className="px-8 py-3 bg-[#006a34] text-white font-semibold rounded-[8px] shadow-[0px_4px_10px_rgba(0,106,52,0.15)] hover:bg-[#00552a] transition-colors">Browse Listings</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
           {claims.map((claim) => {
             const donor = claim.donorId?.donorProfile;
             return (
-              <div key={claim._id} className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all p-6 sm:p-8 flex flex-col md:flex-row gap-8">
+              <div key={claim._id} className="bg-white rounded-[16px] border border-[#dbe3ed] shadow-[0px_4px_10px_rgba(0,106,52,0.04)] hover:shadow-[0px_8px_20px_rgba(0,106,52,0.08)] transition-all p-6 sm:p-8 flex flex-col md:flex-row gap-8">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className={`text-[10px] px-3 py-1 rounded-lg font-bold uppercase tracking-widest ${STATUS_STYLES[claim.status] || "bg-slate-100 text-slate-500"}`}>
+                    <span className={`text-[10px] px-2.5 py-1 rounded-[4px] font-bold uppercase tracking-widest ${STATUS_STYLES[claim.status] || "bg-[#e7eff9] text-[#3f4940]"}`}>
                       {claim.status}
                     </span>
                     {claim.claimedAt && (
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-[12px] text-[#8a968a] font-medium">
                         {new Date(claim.claimedAt).toLocaleDateString([], { dateStyle: "long" })}
                       </span>
                     )}
                   </div>
                   
-                  <h2 className="text-2xl font-bold text-slate-800 mb-2">{claim.foodName}</h2>
-                  <div className="flex items-center gap-4 text-slate-500 font-medium">
+                  <h2 className="text-[20px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] mb-2">{claim.foodName}</h2>
+                  <div className="flex items-center gap-4 text-[#6f7a6f] text-[14px] font-medium">
                      <span className="flex items-center gap-1.5">
-                        <svg className="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" /></svg>
+                        <svg className="w-4 h-4 text-[#8a968a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" /></svg>
                         {claim.category}
                      </span>
-                     <span className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                     <span className="w-1.5 h-1.5 rounded-full bg-[#dbe3ed]" />
                      <span>{claim.quantity}</span>
                   </div>
 
                   {donor && (
-                    <div className="mt-8 pt-6 border-t border-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="mt-6 pt-5 border-t border-[#dbe3ed] grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="flex gap-3">
-                         <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+                         <div className="w-10 h-10 bg-[#f7f9ff] rounded-[8px] flex items-center justify-center text-[#3f4940] shrink-0 border border-[#dbe3ed]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                          </div>
                          <div>
-                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Donor Store</div>
-                            <div className="text-sm font-bold text-slate-700">{donor.name}</div>
+                            <div className="text-[10px] text-[#8a968a] font-bold uppercase tracking-widest mb-0.5">Donor Store</div>
+                            <div className="text-[14px] font-semibold text-[#151c23]">{donor.name}</div>
                          </div>
                       </div>
                       <div className="flex gap-3">
-                         <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 shrink-0">
+                         <div className="w-10 h-10 bg-[#f7f9ff] rounded-[8px] flex items-center justify-center text-[#3f4940] shrink-0 border border-[#dbe3ed]">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                          </div>
                          <div>
-                            <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">Address</div>
-                            <div className="text-sm font-medium text-slate-600 line-clamp-1">{donor.address}</div>
+                            <div className="text-[10px] text-[#8a968a] font-bold uppercase tracking-widest mb-0.5">Address</div>
+                            <div className="text-[14px] font-medium text-[#3f4940] line-clamp-1">{donor.address}</div>
                          </div>
                       </div>
                     </div>
                   )}
 
                   {claim.rating && (
-                    <div className="mt-8 pt-6 border-t border-slate-50 flex items-start gap-4">
-                      <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-500 shrink-0">
+                    <div className="mt-6 pt-5 border-t border-[#dbe3ed] flex items-start gap-4">
+                      <div className="w-10 h-10 bg-[rgba(254,165,32,0.1)] rounded-[8px] flex items-center justify-center text-[#fea520] shrink-0">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                       </div>
                       <div>
-                        <div className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Your Rating</div>
+                        <div className="text-[10px] text-[#8a968a] font-bold uppercase tracking-widest mb-1">Your Rating</div>
                         <div className="flex items-center gap-2">
-                           <div className="flex gap-0.5 text-amber-400 text-sm">
-                             {"★".repeat(claim.rating.stars)}{"☆".repeat(5 - claim.rating.stars)}
+                           <div className="flex gap-0.5 text-[#fea520] text-[14px]">
+                             {"★".repeat(claim.rating.stars)}<span className="text-[#dbe3ed]">{"★".repeat(5 - claim.rating.stars)}</span>
                            </div>
-                           {claim.rating.comment && <span className="text-sm text-slate-500 italic">"{claim.rating.comment}"</span>}
+                           {claim.rating.comment && <span className="text-[14px] text-[#6f7a6f] italic line-clamp-1">"{claim.rating.comment}"</span>}
                         </div>
                       </div>
                     </div>
@@ -242,14 +242,14 @@ export default function ClaimHistoryPage() {
                     <>
                       <button
                         onClick={() => router.push(`/recipient/claim/${claim._id}`)}
-                        className="w-full h-11 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-slate-900/10"
+                        className="w-full h-10 bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] text-[12px] transition-colors shadow-[0px_4px_10px_rgba(0,106,52,0.15)]"
                       >
                         Collection Details
                       </button>
                       <button
                         onClick={() => handleUnclaim(claim._id)}
                         disabled={processingId === claim._id}
-                        className="w-full h-11 bg-orange-50 hover:bg-orange-100 text-orange-600 font-bold rounded-xl text-xs transition-all disabled:opacity-50"
+                        className="w-full h-10 bg-[rgba(212,62,48,0.1)] hover:bg-[rgba(212,62,48,0.2)] text-[#b1241a] font-semibold rounded-[8px] text-[12px] transition-colors disabled:opacity-50"
                       >
                         Cancel Claim
                       </button>
@@ -258,9 +258,9 @@ export default function ClaimHistoryPage() {
                   {claim.status === "collected" && !claim.rating && (
                     <button
                       onClick={() => openRatingModal(claim._id, claim.foodName)}
-                      className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2"
+                      className="w-full h-10 bg-[#f7f9ff] hover:bg-[#e7eff9] text-[#3f4940] border border-[#dbe3ed] font-semibold rounded-[8px] text-[12px] transition-colors flex items-center justify-center gap-2"
                     >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                      <svg className="w-4 h-4 text-[#fea520]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                       Rate Experience
                     </button>
                   )}
@@ -273,13 +273,13 @@ export default function ClaimHistoryPage() {
 
       {/* Rating modal */}
       {ratingModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-10 transform transition-all">
-            <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 mb-6 mx-auto">
+        <div className="fixed inset-0 bg-[#151c23]/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-[16px] shadow-2xl w-full max-w-md p-8 border border-[#dbe3ed]">
+            <div className="w-16 h-16 bg-[rgba(254,165,32,0.1)] rounded-[12px] flex items-center justify-center text-[#fea520] mb-6 mx-auto">
                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 text-center mb-1">Rate Donation</h2>
-            <p className="text-sm text-slate-500 text-center mb-8">How was <span className="font-bold text-slate-700">"{ratingModal.foodName}"</span>?</p>
+            <h2 className="text-[20px] font-bold text-[#151c23] font-['Plus_Jakarta_Sans'] text-center mb-1">Rate Donation</h2>
+            <p className="text-[14px] text-[#6f7a6f] text-center mb-6">How was <span className="font-semibold text-[#151c23]">"{ratingModal.foodName}"</span>?</p>
 
             <div className="space-y-6">
               <div className="flex justify-center py-2">
@@ -287,23 +287,23 @@ export default function ClaimHistoryPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Share your thoughts</label>
+                <label className="block text-[10px] font-bold text-[#8a968a] uppercase tracking-widest mb-2">Share your thoughts</label>
                 <textarea
                   value={ratingComment}
                   onChange={(e) => setRatingComment(e.target.value)}
                   rows={4}
                   placeholder="Tell us about the collection process, food quality, etc."
-                  className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500/30 transition-all resize-none font-medium"
+                  className="w-full bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] px-4 py-3 text-[14px] text-[#151c23] focus:outline-none focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] focus:border-[#006a34] transition-all resize-none placeholder:text-[#8a968a]"
                 />
               </div>
               
-              {ratingError && <p className="text-red-500 text-xs text-center font-bold">{ratingError}</p>}
+              {ratingError && <p className="text-[#b1241a] text-[12px] text-center font-bold">{ratingError}</p>}
 
               <div className="flex flex-col gap-3 pt-2">
-                <button onClick={handleRatingSubmit} disabled={ratingSubmitting} className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-2xl transition-all disabled:opacity-50 shadow-xl shadow-slate-900/10">
+                <button onClick={handleRatingSubmit} disabled={ratingSubmitting} className="w-full h-[48px] bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] transition-colors disabled:opacity-50 shadow-[0px_4px_10px_rgba(0,106,52,0.15)] text-[14px]">
                   {ratingSubmitting ? "Submitting…" : "Submit Feedback"}
                 </button>
-                <button onClick={() => setRatingModal(null)} className="w-full py-3 bg-white text-slate-400 font-bold rounded-2xl hover:text-slate-600 transition-all text-sm">
+                <button onClick={() => setRatingModal(null)} className="w-full h-[48px] bg-white border border-[#dbe3ed] text-[#3f4940] font-semibold rounded-[8px] hover:bg-[#f7f9ff] transition-colors text-[14px]">
                   Discard
                 </button>
               </div>

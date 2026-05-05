@@ -63,22 +63,22 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f9ff] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#f7f9ff] flex items-center justify-center p-6 relative overflow-hidden font-['Inter']">
       {/* Background Orbs */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[rgba(154,247,175,0.2)] rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[rgba(254,165,32,0.1)] rounded-full blur-[120px] translate-x-1/2 translate-y-1/2"></div>
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[rgba(38,133,73,0.05)] rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[rgba(38,133,73,0.05)] rounded-full blur-[120px] translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-      <div className="bg-white max-w-md w-full p-[40px] rounded-[16px] shadow-[0px_4px_20px_0px_rgba(0,106,52,0.04)] border border-[#e2e8f0] relative z-10">
+      <div className="bg-white max-w-md w-full p-10 rounded-[16px] shadow-[0px_4px_20px_0px_rgba(0,106,52,0.04)] border border-[#dbe3ed] relative z-10">
         <div className="mb-10 text-center flex flex-col items-center">
           <Link href="/" className="inline-flex items-center gap-3 mb-[24px] group">
-            <div className="w-10 h-10 bg-[#268549] rounded-[8px] flex items-center justify-center text-[#f6fff3] font-heading font-bold text-xl shadow-[0px_4px_10px_rgba(0,106,52,0.1)] group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 bg-[#006a34] rounded-[8px] flex items-center justify-center text-white font-['Plus_Jakarta_Sans'] font-bold text-xl shadow-[0px_4px_10px_rgba(0,106,52,0.1)] group-hover:scale-105 transition-transform">
               V
             </div>
-            <span className="text-[24px] font-heading font-semibold text-[#15803d] tracking-[-0.5px]">
+            <span className="text-[24px] font-['Plus_Jakarta_Sans'] font-bold text-[#006a34] tracking-tight">
               FoodBridge
             </span>
           </Link>
-          <h1 className="text-[32px] font-heading font-bold text-[#151c23] tracking-tight mb-2">
+          <h1 className="text-[28px] font-bold font-['Plus_Jakarta_Sans'] text-[#151c23] tracking-tight mb-2">
             Welcome Back
           </h1>
           <p className="text-[14px] text-[#6f7a6f] font-medium">
@@ -87,7 +87,7 @@ export default function LoginPage() {
         </div>
 
         {status === "error" && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-100 text-[#b1241a] rounded-[8px] font-semibold text-[14px] text-center">
+          <div className="mb-8 p-4 bg-[rgba(212,62,48,0.1)] border border-[#d43e30]/20 text-[#b1241a] rounded-[8px] font-semibold text-[14px] text-center">
             {errorMessage}
           </div>
         )}
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-[16px] py-[12px] bg-[#f8f9fa] border border-[#becabd] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(0,106,52,0.1)] outline-none transition-all font-medium text-[#151c23] placeholder:text-slate-400 text-[14px]"
+                className="w-full px-[16px] py-[12px] bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] placeholder:text-[#8a968a] text-[14px]"
                 placeholder="owner@example.com"
               />
             </div>
@@ -127,7 +127,7 @@ export default function LoginPage() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-[16px] py-[12px] bg-[#f8f9fa] border border-[#becabd] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(0,106,52,0.1)] outline-none transition-all font-medium text-[#151c23] placeholder:text-slate-400 text-[14px]"
+                className="w-full px-[16px] py-[12px] bg-[#f7f9ff] border border-[#dbe3ed] rounded-[8px] focus:border-[#006a34] focus:ring-2 focus:ring-[rgba(38,133,73,0.3)] outline-none transition-all font-medium text-[#151c23] placeholder:text-[#8a968a] text-[14px]"
                 placeholder="••••••••"
               />
             </div>
@@ -137,7 +137,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full h-[48px] bg-[#006a34] text-white hover:bg-[#268549] font-semibold rounded-[8px] transition-all shadow-[0px_4px_10px_rgba(0,106,52,0.15)] disabled:opacity-50 flex items-center justify-center gap-2 text-[16px]"
+              className="w-full h-[48px] bg-[#006a34] text-white hover:bg-[#00552a] font-semibold rounded-[8px] transition-all shadow-[0px_4px_10px_rgba(0,106,52,0.15)] disabled:opacity-50 flex items-center justify-center gap-2 text-[16px]"
             >
               {status === "loading" ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
