@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function DonorRegisterPage() {
   const router = useRouter();
@@ -91,8 +92,8 @@ export default function DonorRegisterPage() {
       <div className="max-w-[768px] mx-auto relative z-10">
         <div className="mb-[48px] text-center flex flex-col items-center">
            <Link href="/" className="inline-flex items-center gap-3 mb-[24px] group">
-              <div className="w-10 h-10 bg-[#006a34] rounded-[8px] flex items-center justify-center text-white font-['Plus_Jakarta_Sans'] font-bold text-xl shadow-[0px_4px_10px_rgba(0,106,52,0.1)] group-hover:scale-105 transition-transform">
-                V
+              <div className="w-10 h-10 rounded-[8px] relative overflow-hidden shadow-[0px_4px_10px_rgba(0,106,52,0.1)] group-hover:scale-105 transition-transform">
+                <Image src="/foodbridge-logo.jpeg" alt="FoodBridge Logo" fill className="object-cover" />
               </div>
               <span className="text-[24px] font-['Plus_Jakarta_Sans'] font-bold text-[#006a34] tracking-[-0.5px]">FoodBridge</span>
            </Link>
