@@ -100,10 +100,10 @@ export default function DonorOverviewPage() {
           <Link href="/donor/listings" className="inline-flex items-center gap-2 px-6 py-3 bg-white border border-[#dbe3ed] text-[#3f4940] font-semibold rounded-[8px] hover:bg-[#f7f9ff] transition-all shadow-[0px_2px_4px_rgba(0,0,0,0.02)]">
             View My Listings
           </Link>
-          <Link href="/donor/post-listing" className="inline-flex items-center gap-2 px-6 py-3 bg-[#fea520] hover:bg-[#e5941c] text-[#694000] font-semibold rounded-[8px] transition-all shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1)]">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-            Post New Donation
-          </Link>
+        <Link href="/donor/post-listing" className="inline-flex items-center gap-2 px-6 py-3 bg-[#006a34] hover:bg-[#00552a] text-white font-semibold rounded-[8px] transition-colors shadow-[0px_4px_10px_rgba(0,106,52,0.15)] text-[14px] whitespace-nowrap">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Post New Donation
+        </Link>
         </div>
       </div>
 
