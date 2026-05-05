@@ -295,4 +295,11 @@ Represents a food donation post.
   - **Surfaces:** Pure White (`#ffffff`) for cards/components, light slate (`#f7f9ff`, `#f8f9fa`) for page backgrounds and sidebars.
 - **Component Geometry:** Sharp, modern corner radii (e.g., `rounded-[16px]`, `rounded-[8px]`), replacing generic `2xl` Tailwind classes.
 - **Elevation/Depth:** Soft, green-tinted shadows (e.g., `shadow-[0px_4px_20px_0px_rgba(0,106,52,0.04)]`) and structured 1px slate borders (`#e2e8f0`, `#becabd`) for card elevation and layout separation.
-- **Implementation Scope:** Landing Page (`app/page.tsx`), Recipient Browse Dashboard (`app/recipient/browse/page.tsx`), and corresponding Layouts (`app/layout.tsx`, `app/recipient/layout.tsx`). Logical backend integration (API fetching, filtering, JWT auth) was preserved perfectly without disruption.
+- **Implementation Scope:** Landing Page (`app/page.tsx`), Recipient Browse Dashboard (`app/recipient/browse/page.tsx`), Donor Dashboard (`app/donor/page.tsx`), Admin Impact Profile (`app/admin/page.tsx`), and corresponding Layouts (`app/layout.tsx`, `app/recipient/layout.tsx`, `app/donor/layout.tsx`, `app/admin/layout.tsx`). Logical backend integration (API fetching, filtering, JWT auth) was preserved perfectly without disruption.
+
+### NFR-UI: Bento Grid Dashboard Implementation
+- **Objective:** Modernize the Donor Overview and Admin Impact dashboards using the "Vital Harvest" Bento Grid design language.
+- **Components:**
+  - **Donor Dashboard:** Implemented a split-layout Bento Grid featuring stat summaries (+12% trends), a prominent high-contrast "Urgent Action" callout for posting surplus, and an Active Listings quick-management section.
+  - **Admin Dashboard:** Created the "Impact Profile" view using metric cards (Meals Saved, kg Rescued, CO2 Prevented), a custom CSS-based historical bar chart, an Achievements badge grid, and a Community Leaderboard.
+  - **Layout:** Replaced legacy sidebar navigation with the new light-mode Green/Slate top-nav and sidebar structures.
